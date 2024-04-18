@@ -12,6 +12,7 @@ const app = express();
 
 app.use(morgan('dev'));
 app.use(helmet());
+app.use(express.json());
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
 app.use(express.static(path.join(__dirname, 'public')));
