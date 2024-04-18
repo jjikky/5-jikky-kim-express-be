@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const jwt = require('jsonwebtoken');
+const appError = require('../utils/appError');
+
 const usersJsonPath = path.join(__dirname, '../', 'data', 'users.json');
 let users = JSON.parse(fs.readFileSync(usersJsonPath));
 
@@ -9,7 +11,7 @@ const signToken = (id) => {
         expiresIn: '5d',
     });
 };
-exports.register = (req, res) => {
+exports.register = (req, res, next) => {
     const { nickname, email, password } = req.body;
     const newUser = {
         user_id: users.length + 1,
@@ -32,19 +34,20 @@ exports.register = (req, res) => {
         });
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: 'Internal Server Error' });
+        return next(new appError('Internal Server Error', 500));
     }
 };
 
-exports.login = (req, res) => {
+exports.login = (req, res, next) => {
     const { email, password } = req.body;
 
-    if (!email || !password) return res.status(401).json({ message: 'Please provide your email and password' });
+    if (!email || !password) return next(new appError('Please provide your email and password', 401));
 
     const user = users.find((user) => user.email === email && user.password === password);
 
     if (!user) {
-        return res.status(401).json({ message: 'Incorrect email and password' });
+        // return res.status(401).json({ message: 'Incorrect email and password' });
+        return next(new appError('Incorrect email and password', 401));
     }
     const token = signToken(user.user_id);
     res.status(200).json({

@@ -3,6 +3,8 @@ const path = require('path');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
+const createError = require('http-errors');
+const appError = require('./utils/appError');
 const userRouter = require('./routers/userRouter');
 const postRouter = require('./routers/postRouter');
 const dotenv = require('dotenv');
@@ -23,11 +25,13 @@ app.get('/', (req, res) => {
 app.use('/users', userRouter);
 app.use('/posts', postRouter);
 
-app.all('*', (req, res) => {
-    res.status(404).json({
-        status: 'fail',
-        message: `Can't find ${req.originalUrl} on this server`,
-    });
+app.all('*', (req, _, next) => {
+    next(new appError(`Can't find ${req.originalUrl} on this server`, 404));
+});
+
+app.use(function (err, _, res, next) {
+    res.send(err);
+    next();
 });
 
 const PORT = process.env.PORT;
