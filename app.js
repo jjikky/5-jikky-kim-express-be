@@ -3,17 +3,26 @@ const path = require('path');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
-const createError = require('http-errors');
 const appError = require('./utils/appError');
 const userRouter = require('./routers/userRouter');
 const postRouter = require('./routers/postRouter');
 const dotenv = require('dotenv');
+
 dotenv.config();
 
 const app = express();
 
 app.use(morgan('dev'));
-app.use(helmet());
+app.use(
+    helmet({
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'"],
+                connectSrc: ["'self'", 'http://localhost:3000'],
+            },
+        },
+    })
+);
 app.use(express.json());
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
