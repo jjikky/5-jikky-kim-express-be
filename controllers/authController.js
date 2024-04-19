@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const jwt = require('jsonwebtoken');
+const IMAGE_PATH = 'http://localhost:5000/uploads';
+
 const appError = require('../utils/appError');
 
 const usersJsonPath = path.join(__dirname, '../', 'data', 'users.json');
@@ -11,16 +13,23 @@ const signToken = (id) => {
         expiresIn: '5d',
     });
 };
+
 exports.register = (req, res, next) => {
     const { nickname, email, password } = req.body;
+
+    let image = req.file;
+    let fileName = image.originalname.split('.');
+    // NOTE : 파일명 중복 안되게 파일명에 현재시각 삽입
+    const currentTime = Math.floor(new Date().getTime() / 2000);
+
     const newUser = {
         user_id: users.length + 1,
         email,
         password,
         nickname,
-        // TODO : 파일 업로드 구현 하면서 변경
-        avatar: 'http://localhost:3000/img/avatar.jpg',
+        avatar: `${IMAGE_PATH}/${fileName[0]}_${currentTime}.${fileName[1]}`,
     };
+
     const token = signToken(newUser.user_id);
     try {
         users.push(newUser);
@@ -30,7 +39,7 @@ exports.register = (req, res, next) => {
             message: 'user registered successfully',
             token,
             // TODO : user 데이터 중 어떤 데이터 응답할지 생각해보기, 뭐가 필요한지
-            user,
+            newUser,
         });
     } catch (err) {
         console.log(err);
@@ -46,14 +55,44 @@ exports.login = (req, res, next) => {
     const user = users.find((user) => user.email === email && user.password === password);
 
     if (!user) {
-        // return res.status(401).json({ message: 'Incorrect email and password' });
         return next(new appError('Incorrect email and password', 401));
     }
     const token = signToken(user.user_id);
     res.status(200).json({
-        status: 'login success',
+        message: 'login success',
         token,
         // TODO : user 데이터 중 어떤 데이터 응답할지 생각해보기, 뭐가 필요한지
         user,
+    });
+};
+
+exports.isNicknameExist = (req, res, next) => {
+    // 중복 : true
+    const nickname = req.query.nickname;
+    const user = users.find((user) => user.nickname === nickname);
+
+    let isExist = false;
+    if (user !== undefined) {
+        isExist = true;
+    }
+    console.log(user, isExist);
+    res.status(200).json({
+        message: 'success',
+        isExist,
+    });
+};
+exports.isEmailExist = (req, res, next) => {
+    // 중복 : true
+    const email = req.query.email;
+    const user = users.find((user) => user.email === email);
+
+    let isExist = false;
+    if (user !== undefined) {
+        isExist = true;
+    }
+    console.log(user, isExist);
+    res.status(200).json({
+        message: 'success',
+        isExist,
     });
 };
