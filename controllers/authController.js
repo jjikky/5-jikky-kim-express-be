@@ -75,7 +75,6 @@ exports.isNicknameExist = (req, res, next) => {
     if (user !== undefined) {
         isExist = true;
     }
-    console.log(user, isExist);
     res.status(200).json({
         message: 'success',
         isExist,
@@ -90,7 +89,6 @@ exports.isEmailExist = (req, res, next) => {
     if (user !== undefined) {
         isExist = true;
     }
-    console.log(user, isExist);
     res.status(200).json({
         message: 'success',
         isExist,
