@@ -97,24 +97,28 @@ exports.isEmailExist = (req, res, next) => {
 };
 
 exports.protect = async (req, res, next) => {
-    let token;
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-        token = req.headers.authorization.split(' ')[1];
+    try {
+        let token;
+        if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+            token = req.headers.authorization.split(' ')[1];
+        }
+        if (!token) return next(new appError('You are not logged in to get access', 401));
+
+        // validate token
+        const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+        // NOTE : { id: '648052cc...', iat: 1686137103, exp: 1686569103 }
+
+        // user exist
+        const protectUser = users.find((user) => user.user_id === decoded.id);
+        if (!protectUser) {
+            new appError('The user who received this token has been deleted', 401);
+        }
+
+        // TODO : 변경된 비밀번호에 대한 토큰 에러 : 다시 로그인 & 401
+
+        req.user = protectUser;
+    } catch (err) {
+        console.log(err);
     }
-    if (!token) return next(new appError('You are not logged in to get access', 401));
-
-    // validate token
-    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-    // NOTE : { id: '648052cc...', iat: 1686137103, exp: 1686569103 }
-
-    // user exist
-    const protectUser = users.find((user) => user.user_id === decoded.id);
-    if (!protectUser) {
-        new appError('The user who received this token has been deleted', 401);
-    }
-
-    // TODO : 변경된 비밀번호에 대한 토큰 에러 : 다시 로그인 & 401
-
-    req.user = protectUser;
     next();
 };
