@@ -39,7 +39,8 @@ app.all('*', (req, _, next) => {
 });
 
 app.use(function (err, _, res, next) {
-    res.send(err);
+    console.log(err);
+    res.status(err.statusCode).json({ status: err.status, message: err.message });
     next();
 });
 
