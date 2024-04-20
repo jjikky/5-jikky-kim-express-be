@@ -21,3 +21,16 @@ exports.getAllPost = (req, res) => {
         console.log(error);
     }
 };
+
+exports.getSinglePost = (req, res) => {
+    try {
+        const post_id = req.params.post_id;
+        const post = posts.find((post) => post.id === post_id);
+        res.status(200).json({
+            message: 'success',
+            post,
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};

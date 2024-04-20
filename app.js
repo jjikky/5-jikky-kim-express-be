@@ -18,9 +18,9 @@ app.use(
         contentSecurityPolicy: {
             directives: {
                 defaultSrc: ["'self'"],
-                connectSrc: ["'self'", 'http://localhost:3000'],
             },
         },
+        crossOriginResourcePolicy: false,
     })
 );
 app.use(express.json());
