@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 const appError = require('../utils/appError');
 
-const IMAGE_PATH = 'http://localhost:5000/uploads';
+const IMAGE_PATH = 'http://localhost:5000/uploads/avatar';
 
 const usersJsonPath = path.join(__dirname, '../', 'data', 'users.json');
 let users = JSON.parse(fs.readFileSync(usersJsonPath));

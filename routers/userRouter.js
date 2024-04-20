@@ -1,12 +1,13 @@
 const express = require('express');
 const multer = require('multer');
 const { register, login, isNicknameExist, isEmailExist } = require('../controllers/authController');
+const { getSingleUser } = require('../controllers/userController');
 
 const userRouter = express.Router();
 
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
-        callback(null, 'public/uploads/');
+        callback(null, 'public/uploads/avatar');
     },
     filename: (req, file, callback) => {
         const currentTime = Math.floor(new Date().getTime() / 2000);
@@ -29,5 +30,7 @@ userRouter.post('/register', upload.single('avatar'), register);
 userRouter.post('/login', login);
 userRouter.get('/nickname/check', isNicknameExist);
 userRouter.get('/email/check', isEmailExist);
+
+userRouter.get('/:id', getSingleUser);
 
 module.exports = userRouter;
