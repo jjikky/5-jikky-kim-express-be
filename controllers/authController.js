@@ -119,6 +119,8 @@ exports.protect = async (req, res, next) => {
         req.user = protectUser;
     } catch (err) {
         console.log(err);
+        // TODO Error Controller 만들기
+        if ((err.name = 'TokenExpiredError')) return next(new appError('Token Expired', 401));
     }
     next();
 };

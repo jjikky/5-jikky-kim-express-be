@@ -17,9 +17,6 @@ const postImageStorage = multer.diskStorage({
         callback(null, 'public/uploads/post');
     },
     filename: (req, file, callback) => {
-        console.log('file');
-        console.log(file);
-        console.log('file');
         const currentTime = Math.floor(new Date().getTime() / 2000);
         let fileName = file.originalname.split('.');
         const changedFileName = `${fileName[0]}_${currentTime}.${fileName[1]}`;

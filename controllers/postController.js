@@ -30,10 +30,13 @@ exports.getAllPost = (req, res) => {
 
 exports.getSinglePost = (req, res) => {
     try {
-        const post_id = req.params.post_id;
-        let post = posts.find((post) => post.id === post_id);
+        const post_id = req.params.id * 1;
+        let post = posts.find((post) => post.post_id === post_id);
 
-        // TODO : 조회수 +1
+        // 조회수 증가
+        // TODO : user ip 기반 제한 ?
+        post.count.view++;
+        fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
 
         res.status(200).json({
             message: 'success',
@@ -83,5 +86,62 @@ exports.createPost = (req, res, next) => {
         next(new appError('Internal Server Error', 500));
     }
 };
-exports.updatePost = (req, res, next) => {};
-exports.deletePost = (req, res, next) => {};
+exports.updatePost = (req, res, next) => {
+    try {
+        const post_id = req.params.id * 1;
+        let post = posts.find((post) => post.post_id === post_id);
+        const { title, content } = req.body;
+        post.title = title;
+        post.content = content;
+
+        if (req.file !== undefined) {
+            // 기존 이미지 삭제
+            deletePostImage(post);
+
+            // 이미지 업데이트 처리
+            let image = req.file;
+            let fileName = image.originalname.split('.');
+            const currentTime = Math.floor(new Date().getTime() / 2000);
+            post.post_image = `${IMAGE_PATH}/${fileName[0]}_${currentTime}.${fileName[1]}`;
+        }
+
+        fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
+
+        res.status(200).json({
+            message: 'post updated successfully',
+        });
+    } catch (err) {
+        console.log(err);
+        next(new appError('Internal Server Error', 500));
+    }
+};
+
+exports.deletePost = (req, res, next) => {
+    try {
+        const post_id = req.params.id;
+        let post = posts.find((post) => post.post_id == post_id);
+        // 파일 삭제
+        deletePostImage(post);
+
+        // 더미데이터에서 해당 객체 삭제
+        let index = posts.indexOf(post);
+        posts.splice(index, 1);
+        fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
+        res.status(200).json({
+            message: 'post deleted successfully',
+        });
+    } catch (err) {
+        console.log(err);
+        next(new appError('Internal Server Error', 500));
+    }
+};
+
+function deletePostImage(post) {
+    const filename = post.post_image.substring(post.post_image.lastIndexOf('/') + 1);
+    const filePath = path.join(__dirname, '../', 'public', 'uploads', 'post', `${filename}`);
+    fs.unlinkSync(filePath, (err) => {
+        if (err) {
+            console.log(err);
+        }
+    });
+}
