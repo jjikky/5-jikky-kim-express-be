@@ -187,7 +187,21 @@ exports.createComment = (req, res, next) => {
 };
 
 exports.updateComment = (req, res, next) => {
+    const content = req.body.comment;
     const { post_id, comment_id } = req.params;
+    // update comment
+    try {
+        let post = posts.find((post) => post.post_id === post_id * 1);
+        let comment = post.comments.find((comment) => comment.comment_id === comment_id * 1);
+        comment.content = content;
+        fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
+        res.status(200).json({
+            message: 'comment updated successfully',
+        });
+    } catch (err) {
+        console.log(err);
+        next(new appError('Internal Server Error', 500));
+    }
 };
 
 exports.deleteComment = (req, res, next) => {

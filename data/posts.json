@@ -694,7 +694,7 @@
     "count": {
       "like": 1200,
       "comment": 34000,
-      "view": 530081
+      "view": 530113
     },
     "creator": {
       "user_id": 1,
@@ -721,6 +721,26 @@
         },
         "content": "asdfasdf",
         "created_at": "2024-04-21 23:52:00"
+      },
+      {
+        "comment_id": 3,
+        "creator": {
+          "user_id": 1,
+          "nickname": "user1",
+          "avatar": "http://localhost:5000/uploads/avatar/user1.jpg"
+        },
+        "content": "ㄴㅁㅇㅎㅁㄴㅇㅎㅁㅇ",
+        "created_at": "2024-04-22 00:26:29"
+      },
+      {
+        "comment_id": 4,
+        "creator": {
+          "user_id": 1,
+          "nickname": "user1",
+          "avatar": "http://localhost:5000/uploads/avatar/user1.jpg"
+        },
+        "created_at": "2024-04-22 00:31:32",
+        "content": "ㅁㄴㄻㄴ"
       }
     ]
   },
@@ -733,13 +753,34 @@
     "count": {
       "like": 0,
       "comment": 0,
-      "view": 1
+      "view": 12
     },
     "creator": {
       "user_id": 1,
       "nickname": "user1",
       "avatar": "http://localhost:5000/uploads/avatar/user1.jpg"
     },
-    "comments": []
+    "comments": [
+      {
+        "comment_id": 1,
+        "creator": {
+          "user_id": 1,
+          "nickname": "user1",
+          "avatar": "http://localhost:5000/uploads/avatar/user1.jpg"
+        },
+        "content": "asd",
+        "created_at": "2024-04-22 00:45:28"
+      },
+      {
+        "comment_id": 2,
+        "creator": {
+          "user_id": 1,
+          "nickname": "user1",
+          "avatar": "http://localhost:5000/uploads/avatar/user1.jpg"
+        },
+        "content": "gsd",
+        "created_at": "2024-04-22 00:45:30"
+      }
+    ]
   }
 ]
