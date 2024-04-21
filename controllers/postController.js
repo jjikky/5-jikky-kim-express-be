@@ -145,3 +145,51 @@ function deletePostImage(post) {
         }
     });
 }
+
+exports.createComment = (req, res, next) => {
+    try {
+        const post_id = req.params.post_id * 1;
+        const content = req.body.comment;
+        const user_id = req.user.user_id * 1;
+
+        const created_at = moment().format('YYYY-MM-DD HH:mm:ss');
+
+        let post = posts.find((post) => post.post_id === post_id);
+        let user = users.find((user) => user.user_id === user_id);
+
+        const nickname = user.nickname;
+        const avatar = user.avatar;
+        // comment_id 구현
+
+        const comment_id = post.comments.length + 1;
+        const comment = {
+            comment_id,
+            creator: {
+                user_id,
+                nickname,
+                avatar,
+            },
+            content,
+            created_at,
+        };
+
+        post.comments.push(comment);
+
+        fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
+        res.status(201).json({
+            message: 'comment created successfully',
+            post,
+        });
+    } catch (err) {
+        console.log(err);
+        next(new appError('Internal Server Error', 500));
+    }
+};
+
+exports.updateComment = (req, res, next) => {
+    const { post_id, comment_id } = req.params;
+};
+
+exports.deleteComment = (req, res, next) => {
+    const { post_id, comment_id } = req.params;
+};

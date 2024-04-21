@@ -50,7 +50,6 @@ exports.register = (req, res, next) => {
 
 exports.login = (req, res, next) => {
     const { email, password } = req.body;
-
     if (!email || !password) return next(new appError('Please provide your email and password', 401));
 
     const user = users.find((user) => user.email === email && user.password === password);

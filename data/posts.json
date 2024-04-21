@@ -17,6 +17,7 @@
     },
     "comments": [
       {
+        "comment_id": 1,
         "creator": {
           "user_id": 1,
           "nickname": "user1",
@@ -26,6 +27,7 @@
         "content": "읽어주셔서 감사합니다"
       },
       {
+        "comment_id": 2,
         "creator": {
           "user_id": 2,
           "nickname": "user2",
@@ -35,6 +37,7 @@
         "content": "좋은 내용입니다."
       },
       {
+        "comment_id": 3,
         "creator": {
           "user_id": 3,
           "nickname": "user3",
@@ -63,6 +66,7 @@
     },
     "comments": [
       {
+        "comment_id": 1,
         "creator": {
           "user_id": 1,
           "nickname": "user1",
@@ -72,6 +76,7 @@
         "content": "읽어주셔서 감사합니다"
       },
       {
+        "comment_id": 2,
         "creator": {
           "user_id": 2,
           "nickname": "user2",
@@ -81,6 +86,7 @@
         "content": "좋은 내용입니다."
       },
       {
+        "comment_id": 3,
         "creator": {
           "user_id": 3,
           "nickname": "user3",
@@ -109,6 +115,7 @@
     },
     "comments": [
       {
+        "comment_id": 1,
         "creator": {
           "user_id": 1,
           "nickname": "user1",
@@ -118,6 +125,7 @@
         "content": "읽어주셔서 감사합니다"
       },
       {
+        "comment_id": 2,
         "creator": {
           "user_id": 2,
           "nickname": "user2",
@@ -127,6 +135,7 @@
         "content": "좋은 내용입니다."
       },
       {
+        "comment_id": 3,
         "creator": {
           "user_id": 3,
           "nickname": "user3",
@@ -155,6 +164,7 @@
     },
     "comments": [
       {
+        "comment_id": 1,
         "creator": {
           "user_id": 1,
           "nickname": "user1",
@@ -164,6 +174,7 @@
         "content": "읽어주셔서 감사합니다"
       },
       {
+        "comment_id": 2,
         "creator": {
           "user_id": 2,
           "nickname": "user2",
@@ -173,6 +184,7 @@
         "content": "좋은 내용입니다."
       },
       {
+        "comment_id": 3,
         "creator": {
           "user_id": 3,
           "nickname": "user3",
@@ -201,6 +213,7 @@
     },
     "comments": [
       {
+        "comment_id": 1,
         "creator": {
           "user_id": 1,
           "nickname": "user1",
@@ -210,6 +223,7 @@
         "content": "읽어주셔서 감사합니다"
       },
       {
+        "comment_id": 2,
         "creator": {
           "user_id": 2,
           "nickname": "user2",
@@ -219,6 +233,7 @@
         "content": "좋은 내용입니다."
       },
       {
+        "comment_id": 3,
         "creator": {
           "user_id": 3,
           "nickname": "user3",
@@ -247,6 +262,7 @@
     },
     "comments": [
       {
+        "comment_id": 1,
         "creator": {
           "user_id": 1,
           "nickname": "user1",
@@ -256,6 +272,7 @@
         "content": "읽어주셔서 감사합니다"
       },
       {
+        "comment_id": 2,
         "creator": {
           "user_id": 2,
           "nickname": "user2",
@@ -265,6 +282,7 @@
         "content": "좋은 내용입니다."
       },
       {
+        "comment_id": 3,
         "creator": {
           "user_id": 3,
           "nickname": "user3",
@@ -293,6 +311,7 @@
     },
     "comments": [
       {
+        "comment_id": 1,
         "creator": {
           "user_id": 1,
           "nickname": "user1",
@@ -302,6 +321,7 @@
         "content": "읽어주셔서 감사합니다"
       },
       {
+        "comment_id": 2,
         "creator": {
           "user_id": 2,
           "nickname": "user2",
@@ -311,6 +331,7 @@
         "content": "좋은 내용입니다."
       },
       {
+        "comment_id": 3,
         "creator": {
           "user_id": 3,
           "nickname": "user3",
@@ -339,6 +360,7 @@
     },
     "comments": [
       {
+        "comment_id": 1,
         "creator": {
           "user_id": 1,
           "nickname": "user1",
@@ -348,6 +370,7 @@
         "content": "읽어주셔서 감사합니다"
       },
       {
+        "comment_id": 2,
         "creator": {
           "user_id": 2,
           "nickname": "user2",
@@ -357,6 +380,7 @@
         "content": "좋은 내용입니다."
       },
       {
+        "comment_id": 3,
         "creator": {
           "user_id": 3,
           "nickname": "user3",
@@ -385,6 +409,7 @@
     },
     "comments": [
       {
+        "comment_id": 1,
         "creator": {
           "user_id": 1,
           "nickname": "user1",
@@ -394,6 +419,7 @@
         "content": "읽어주셔서 감사합니다"
       },
       {
+        "comment_id": 2,
         "creator": {
           "user_id": 2,
           "nickname": "user2",
@@ -403,6 +429,7 @@
         "content": "좋은 내용입니다."
       },
       {
+        "comment_id": 3,
         "creator": {
           "user_id": 3,
           "nickname": "user3",
@@ -431,6 +458,7 @@
     },
     "comments": [
       {
+        "comment_id": 1,
         "creator": {
           "user_id": 1,
           "nickname": "user1",
@@ -440,6 +468,7 @@
         "content": "읽어주셔서 감사합니다"
       },
       {
+        "comment_id": 2,
         "creator": {
           "user_id": 2,
           "nickname": "user2",
@@ -449,6 +478,7 @@
         "content": "좋은 내용입니다."
       },
       {
+        "comment_id": 3,
         "creator": {
           "user_id": 3,
           "nickname": "user3",
@@ -477,6 +507,7 @@
     },
     "comments": [
       {
+        "comment_id": 1,
         "creator": {
           "user_id": 1,
           "nickname": "user1",
@@ -486,6 +517,7 @@
         "content": "읽어주셔서 감사합니다"
       },
       {
+        "comment_id": 2,
         "creator": {
           "user_id": 2,
           "nickname": "user2",
@@ -495,6 +527,7 @@
         "content": "좋은 내용입니다."
       },
       {
+        "comment_id": 3,
         "creator": {
           "user_id": 3,
           "nickname": "user3",
@@ -523,6 +556,7 @@
     },
     "comments": [
       {
+        "comment_id": 1,
         "creator": {
           "user_id": 1,
           "nickname": "user1",
@@ -532,6 +566,7 @@
         "content": "읽어주셔서 감사합니다"
       },
       {
+        "comment_id": 2,
         "creator": {
           "user_id": 2,
           "nickname": "user2",
@@ -541,6 +576,7 @@
         "content": "좋은 내용입니다."
       },
       {
+        "comment_id": 3,
         "creator": {
           "user_id": 3,
           "nickname": "user3",
@@ -569,6 +605,7 @@
     },
     "comments": [
       {
+        "comment_id": 1,
         "creator": {
           "user_id": 1,
           "nickname": "user1",
@@ -578,6 +615,7 @@
         "content": "읽어주셔서 감사합니다"
       },
       {
+        "comment_id": 2,
         "creator": {
           "user_id": 2,
           "nickname": "user2",
@@ -587,6 +625,7 @@
         "content": "좋은 내용입니다."
       },
       {
+        "comment_id": 3,
         "creator": {
           "user_id": 3,
           "nickname": "user3",
@@ -615,6 +654,7 @@
     },
     "comments": [
       {
+        "comment_id": 1,
         "creator": {
           "user_id": 1,
           "nickname": "user1",
@@ -624,6 +664,7 @@
         "content": "읽어주셔서 감사합니다"
       },
       {
+        "comment_id": 2,
         "creator": {
           "user_id": 2,
           "nickname": "user2",
@@ -633,6 +674,7 @@
         "content": "좋은 내용입니다."
       },
       {
+        "comment_id": 3,
         "creator": {
           "user_id": 3,
           "nickname": "user3",
@@ -652,7 +694,7 @@
     "count": {
       "like": 1200,
       "comment": 34000,
-      "view": 530000
+      "view": 530041
     },
     "creator": {
       "user_id": 1,
@@ -661,6 +703,7 @@
     },
     "comments": [
       {
+        "comment_id": 1,
         "creator": {
           "user_id": 1,
           "nickname": "user1",
@@ -670,6 +713,7 @@
         "content": "읽어주셔서 감사합니다"
       },
       {
+        "comment_id": 2,
         "creator": {
           "user_id": 2,
           "nickname": "user2",
@@ -679,6 +723,7 @@
         "content": "좋은 내용입니다."
       },
       {
+        "comment_id": 3,
         "creator": {
           "user_id": 3,
           "nickname": "user3",
@@ -686,6 +731,16 @@
         },
         "created_at": "2021-01-01 00:00:00",
         "content": "좋은 내용입니다."
+      },
+      {
+        "comment_id": 4,
+        "creator": {
+          "user_id": 1,
+          "nickname": "user1",
+          "avatar": "http://localhost:5000/uploads/avatar/user1.jpg"
+        },
+        "content": "hello",
+        "created_at": "2024-04-21 23:15:04"
       }
     ]
   },
