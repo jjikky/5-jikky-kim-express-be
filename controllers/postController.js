@@ -191,5 +191,17 @@ exports.updateComment = (req, res, next) => {
 };
 
 exports.deleteComment = (req, res, next) => {
-    const { post_id, comment_id } = req.params;
+    try {
+        const { post_id, comment_id } = req.params;
+        let post = posts.find((post) => post.post_id === post_id * 1);
+        let index = post.comments.indexOf(comment_id);
+        post.comments.splice(index, 1);
+        fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
+        res.status(200).json({
+            message: 'comment deleted successfully',
+        });
+    } catch (err) {
+        console.log(err);
+        next(new appError('Internal Server Error', 500));
+    }
 };
