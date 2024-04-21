@@ -123,3 +123,26 @@ exports.protect = async (req, res, next) => {
     }
     next();
 };
+
+exports.changePassword = (req, res, next) => {
+    try {
+        const password = req.body.password;
+        const user_id = req.user.user_id * 1;
+
+        let user = users.find((user) => user.user_id === user_id);
+        // console.log(req.body.password);
+        if (user.password === password) return next(new appError('Same As The Original Password', 400));
+        user.password = password;
+        fs.writeFileSync(usersJsonPath, JSON.stringify(users, null, 2), 'utf8');
+
+        const token = signToken(user_id);
+        res.status(200).json({
+            message: 'Password Changed Successfully',
+            token,
+            user_id,
+        });
+    } catch (error) {
+        console.log(error);
+        return next(new appError('Internal Server Error', 500));
+    }
+};

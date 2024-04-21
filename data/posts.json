@@ -746,14 +746,14 @@
   },
   {
     "post_id": 16,
-    "title": "댓글 실험실",
-    "content": "댓글 실험실",
+    "title": "댓글 실험실3",
+    "content": "댓글 실험실3",
     "created_at": "2024-04-21 21:40:40",
-    "post_image": "http://localhost:5000/uploads/post/스크린샷 2024-04-13 141819_856851620.png",
+    "post_image": "http://localhost:5000/uploads/post/배경_카클스_yellow_856857249.png",
     "count": {
       "like": 0,
       "comment": 0,
-      "view": 12
+      "view": 16
     },
     "creator": {
       "user_id": 1,
