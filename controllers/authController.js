@@ -130,13 +130,12 @@ exports.changePassword = (req, res, next) => {
         const user_id = req.user.user_id * 1;
 
         let user = users.find((user) => user.user_id === user_id);
-        // console.log(req.body.password);
         if (user.password === password) return next(new appError('Same As The Original Password', 400));
         user.password = password;
         fs.writeFileSync(usersJsonPath, JSON.stringify(users, null, 2), 'utf8');
 
         const token = signToken(user_id);
-        res.status(200).json({
+        res.status(201).json({
             message: 'Password Changed Successfully',
             token,
             user_id,
@@ -146,3 +145,44 @@ exports.changePassword = (req, res, next) => {
         return next(new appError('Internal Server Error', 500));
     }
 };
+
+exports.updateUser = (req, res, next) => {
+    try {
+        // 여기 구현하고 프론트랑 테스트 해보기
+        const user_id = req.user.user_id;
+        const { nickname, email } = req.body;
+        let user = users.find((user) => user.user_id === user_id);
+        user.nickname = nickname;
+        user.email = email;
+
+        if (req.file !== undefined) {
+            // 기존 이미지 삭제
+            deleteAvatar(user);
+
+            // 이미지 업데이트 처리
+            let image = req.file;
+            let fileName = image.originalname.split('.');
+            const currentTime = Math.floor(new Date().getTime() / 2000);
+            user.avatar = `${IMAGE_PATH}/${fileName[0]}_${currentTime}.${fileName[1]}`;
+        }
+
+        fs.writeFileSync(usersJsonPath, JSON.stringify(users, null, 2), 'utf8');
+
+        res.status(201).json({
+            message: 'User Updated Successfully',
+        });
+    } catch (error) {
+        console.log(error);
+        return next(new appError('Internal Server Error', 500));
+    }
+};
+
+function deleteAvatar(user) {
+    const filename = user.avatar.substring(user.avatar.lastIndexOf('/') + 1);
+    const filePath = path.join(__dirname, '../', 'public', 'uploads', 'avatar', `${filename}`);
+    fs.unlinkSync(filePath, (err) => {
+        if (err) {
+            console.log(err);
+        }
+    });
+}

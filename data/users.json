@@ -66,7 +66,7 @@
     "user_id": 10,
     "email": "user10@example.com",
     "password": "Password1!",
-    "nickname": "asdasdas",
-    "avatar": "http://localhost:5000/uploads/avatar/스크린샷 2024-04-13 144018_856850150.png"
+    "nickname": "user10",
+    "avatar": "http://localhost:5000/uploads/avatar/스크린샷 2024-04-13 144851_856873491.png"
   }
 ]
