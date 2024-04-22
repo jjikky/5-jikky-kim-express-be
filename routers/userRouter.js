@@ -7,6 +7,7 @@ const {
     changePassword,
     protect,
     updateUser,
+    deleteUser,
 } = require('../controllers/authController');
 const { getSingleUser } = require('../controllers/userController');
 const { uploadAvatar } = require('../utils/multer');
@@ -19,6 +20,7 @@ userRouter.get('/nickname/check', isNicknameExist);
 userRouter.get('/email/check', isEmailExist);
 userRouter.patch('/password/change', protect, changePassword);
 userRouter.patch('/', protect, uploadAvatar.single('avatar'), updateUser);
+userRouter.delete('/', protect, deleteUser);
 
 userRouter.get('/:id', getSingleUser);
 

@@ -177,6 +177,22 @@ exports.updateUser = (req, res, next) => {
     }
 };
 
+exports.deleteUser = (req, res, next) => {
+    try {
+        const user_id = req.user.user_id;
+        let user = users.find((user) => user.user_id === user_id);
+        deleteAvatar(user);
+        users = users.filter((user) => user.user_id !== user_id);
+        fs.writeFileSync(usersJsonPath, JSON.stringify(users, null, 2), 'utf8');
+        res.status(200).json({
+            message: 'User Deleted Successfully',
+        });
+    } catch (err) {
+        console.log(err);
+        return next(new appError('Internal Server Error', 500));
+    }
+};
+
 function deleteAvatar(user) {
     const filename = user.avatar.substring(user.avatar.lastIndexOf('/') + 1);
     const filePath = path.join(__dirname, '../', 'public', 'uploads', 'avatar', `${filename}`);
