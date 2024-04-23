@@ -61,5 +61,26 @@
     "password": "Password1!",
     "nickname": "user8",
     "avatar": "http://localhost:5000/uploads/avatar/스크린샷 2024-04-13 144851_856814981.png"
+  },
+  {
+    "user_id": 10,
+    "email": "user10@example.com",
+    "password": "Password1!",
+    "nickname": "user10",
+    "avatar": "http://localhost:5000/uploads/avatar/스크린샷 2024-04-13 144018_856876071.png"
+  },
+  {
+    "user_id": 11,
+    "email": "user11@example.com",
+    "password": "Password1!",
+    "nickname": "user11",
+    "avatar": "http://localhost:5000/uploads/avatar/배경_카클스_yellow_856878650.png"
+  },
+  {
+    "user_id": 12,
+    "email": "user13@example.com",
+    "password": "PAssword1!",
+    "nickname": "user13",
+    "avatar": "http://localhost:5000/uploads/avatar/배경_카클스_yellow_856880820.png"
   }
 ]

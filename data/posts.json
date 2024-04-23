@@ -8,7 +8,7 @@
     "count": {
       "like": 120,
       "comment": 34000,
-      "view": 750002
+      "view": 750007
     },
     "creator": {
       "user_id": 1,
@@ -57,7 +57,7 @@
     "count": {
       "like": 1200,
       "comment": 34000,
-      "view": 5300050
+      "view": 5300052
     },
     "creator": {
       "user_id": 1,
@@ -106,7 +106,7 @@
     "count": {
       "like": 1200,
       "comment": 34000,
-      "view": 530000
+      "view": 530005
     },
     "creator": {
       "user_id": 1,
@@ -400,7 +400,7 @@
     "count": {
       "like": 1200,
       "comment": 34000,
-      "view": 530000
+      "view": 530001
     },
     "creator": {
       "user_id": 1,
@@ -547,7 +547,7 @@
     "count": {
       "like": 1200,
       "comment": 34000,
-      "view": 530000
+      "view": 530004
     },
     "creator": {
       "user_id": 1,

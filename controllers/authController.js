@@ -40,7 +40,7 @@ exports.register = (req, res, next) => {
             message: 'user registered successfully',
             token,
             // TODO : user 데이터 중 어떤 데이터 응답할지 생각해보기, 뭐가 필요한지
-            newUser,
+            user_id: newUser.user_id,
         });
     } catch (err) {
         console.log(err);
@@ -62,7 +62,7 @@ exports.login = (req, res, next) => {
         message: 'login success',
         token,
         // TODO : user 데이터 중 어떤 데이터 응답할지 생각해보기, 뭐가 필요한지
-        user,
+        user_id: user.user_id,
     });
 };
 
