@@ -15,7 +15,7 @@ const { uploadPostImage } = require('../utils/multer');
 const postRouter = express.Router();
 
 postRouter.get('/', protect, getAllPost);
-postRouter.get('/:id', getSinglePost);
+postRouter.get('/:id', protect, getSinglePost);
 
 postRouter.post('/:post_id/comment', protect, createComment);
 postRouter.patch('/:post_id/comment/:comment_id', protect, updateComment);
