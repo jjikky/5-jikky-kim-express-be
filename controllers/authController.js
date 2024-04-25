@@ -170,6 +170,7 @@ exports.updateUser = (req, res, next) => {
 
         res.status(201).json({
             message: 'User Updated Successfully',
+            user,
         });
     } catch (error) {
         console.log(error);

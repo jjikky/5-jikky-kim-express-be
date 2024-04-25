@@ -28,10 +28,13 @@ exports.getAllPost = (req, res) => {
     }
 };
 
-exports.getSinglePost = (req, res) => {
+exports.getSinglePost = (req, res, next) => {
     try {
         const post_id = req.params.id * 1;
         let post = posts.find((post) => post.post_id === post_id);
+        if (!post) {
+            return next(new appError('page not found', 404));
+        }
 
         // 조회수 증가
         // TODO : user ip 기반 제한 ?

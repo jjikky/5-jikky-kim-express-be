@@ -9,28 +9,28 @@
   {
     "user_id": 2,
     "email": "user2@example.com",
-    "password": "Password2!",
+    "password": "Password1!",
     "nickname": "user2",
     "avatar": "http://localhost:5000/uploads/avatar/user2.jpg"
   },
   {
     "user_id": 3,
     "email": "user3@example.com",
-    "password": "Password3!",
+    "password": "Password1!",
     "nickname": "user3",
     "avatar": "http://localhost:5000/uploads/avatar/user3.jpg"
   },
   {
     "user_id": 4,
     "email": "user4@example.com",
-    "password": "Password4!",
+    "password": "Password1!",
     "nickname": "user4",
     "avatar": "http://localhost:5000/uploads/avatar/user3.jpg"
   },
   {
     "user_id": 5,
     "email": "user5@example.com",
-    "password": "Password5!",
+    "password": "Password1!",
     "nickname": "user5",
     "avatar": "http://localhost:5000/uploads/avatar/user3.jpg"
   },
@@ -43,23 +43,23 @@
   },
   {
     "user_id": 7,
-    "email": "user6@example.com",
+    "email": "user7@example.com",
     "password": "Password1!",
-    "nickname": "user6",
+    "nickname": "user7",
     "avatar": "http://localhost:5000/uploads/avatar/증명사진_856753384.jpg"
   },
   {
     "user_id": 8,
-    "email": "user7@example.com",
+    "email": "user8@example.com",
     "password": "Password1!",
-    "nickname": "user7",
+    "nickname": "user8",
     "avatar": "http://localhost:5000/uploads/avatar/배경_카클스_yellow_856813560.png"
   },
   {
     "user_id": 9,
-    "email": "user8@example.com",
+    "email": "user9@example.com",
     "password": "Password1!",
-    "nickname": "user8",
+    "nickname": "user9",
     "avatar": "http://localhost:5000/uploads/avatar/스크린샷 2024-04-13 144851_856814981.png"
   },
   {
@@ -78,9 +78,16 @@
   },
   {
     "user_id": 12,
-    "email": "user13@example.com",
-    "password": "PAssword1!",
-    "nickname": "user13",
+    "email": "user12@example.com",
+    "password": "Password1!",
+    "nickname": "user12",
     "avatar": "http://localhost:5000/uploads/avatar/배경_카클스_yellow_856880820.png"
+  },
+  {
+    "user_id": 13,
+    "email": "user13@example.com",
+    "password": "Password1!",
+    "nickname": "user13",
+    "avatar": "http://localhost:5000/uploads/avatar/two_cat_with_laptop_857015294.jpg"
   }
 ]
