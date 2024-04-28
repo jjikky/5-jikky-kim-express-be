@@ -2,92 +2,113 @@
   {
     "user_id": 1,
     "email": "user1@example.com",
-    "password": "Password1!",
+    "password": "$2b$12$/3/LTcnJLtxf9T3CBKtkDOAzodWqB0BgbKiYbLzMxuiOcM1YApNJi",
     "nickname": "user1",
     "avatar": "http://localhost:5000/uploads/avatar/user1.jpg"
   },
   {
     "user_id": 2,
     "email": "user2@example.com",
-    "password": "Password1!",
+    "password": "$2b$12$/3/LTcnJLtxf9T3CBKtkDOAzodWqB0BgbKiYbLzMxuiOcM1YApNJi",
     "nickname": "user2",
     "avatar": "http://localhost:5000/uploads/avatar/user2.jpg"
   },
   {
     "user_id": 3,
     "email": "user3@example.com",
-    "password": "Password1!",
+    "password": "$2b$12$/3/LTcnJLtxf9T3CBKtkDOAzodWqB0BgbKiYbLzMxuiOcM1YApNJi",
     "nickname": "user3",
     "avatar": "http://localhost:5000/uploads/avatar/user3.jpg"
   },
   {
     "user_id": 4,
     "email": "user4@example.com",
-    "password": "Password1!",
+    "password": "$2b$12$/3/LTcnJLtxf9T3CBKtkDOAzodWqB0BgbKiYbLzMxuiOcM1YApNJi",
     "nickname": "user4",
     "avatar": "http://localhost:5000/uploads/avatar/user3.jpg"
   },
   {
     "user_id": 5,
     "email": "user5@example.com",
-    "password": "Password1!",
+    "password": "$2b$12$/3/LTcnJLtxf9T3CBKtkDOAzodWqB0BgbKiYbLzMxuiOcM1YApNJi",
     "nickname": "user5",
     "avatar": "http://localhost:5000/uploads/avatar/user3.jpg"
   },
   {
     "user_id": 6,
     "email": "kok5417@skuniv.ac.kr",
-    "password": "Password1!",
+    "password": "$2b$12$/3/LTcnJLtxf9T3CBKtkDOAzodWqB0BgbKiYbLzMxuiOcM1YApNJi",
     "nickname": "jikky",
     "avatar": "http://localhost:5000/uploads/avatar/배경_카클스_yellow_856747090.png"
   },
   {
     "user_id": 7,
     "email": "user7@example.com",
-    "password": "Password1!",
+    "password": "$2b$12$/3/LTcnJLtxf9T3CBKtkDOAzodWqB0BgbKiYbLzMxuiOcM1YApNJi",
     "nickname": "user7",
     "avatar": "http://localhost:5000/uploads/avatar/증명사진_856753384.jpg"
   },
   {
     "user_id": 8,
     "email": "user8@example.com",
-    "password": "Password1!",
+    "password": "$2b$12$/3/LTcnJLtxf9T3CBKtkDOAzodWqB0BgbKiYbLzMxuiOcM1YApNJi",
     "nickname": "user8",
     "avatar": "http://localhost:5000/uploads/avatar/배경_카클스_yellow_856813560.png"
   },
   {
     "user_id": 9,
     "email": "user9@example.com",
-    "password": "Password1!",
+    "password": "$2b$12$/3/LTcnJLtxf9T3CBKtkDOAzodWqB0BgbKiYbLzMxuiOcM1YApNJi",
     "nickname": "user9",
     "avatar": "http://localhost:5000/uploads/avatar/스크린샷 2024-04-13 144851_856814981.png"
   },
   {
     "user_id": 10,
     "email": "user10@example.com",
-    "password": "Password1!",
+    "password": "$2b$12$/3/LTcnJLtxf9T3CBKtkDOAzodWqB0BgbKiYbLzMxuiOcM1YApNJi",
     "nickname": "user10",
     "avatar": "http://localhost:5000/uploads/avatar/스크린샷 2024-04-13 144018_856876071.png"
   },
   {
     "user_id": 11,
     "email": "user11@example.com",
-    "password": "Password1!",
+    "password": "$2b$12$/3/LTcnJLtxf9T3CBKtkDOAzodWqB0BgbKiYbLzMxuiOcM1YApNJi",
     "nickname": "user11",
     "avatar": "http://localhost:5000/uploads/avatar/배경_카클스_yellow_856878650.png"
   },
   {
     "user_id": 12,
     "email": "user12@example.com",
-    "password": "Password1!",
+    "password": "$2b$12$/3/LTcnJLtxf9T3CBKtkDOAzodWqB0BgbKiYbLzMxuiOcM1YApNJi",
     "nickname": "user12",
     "avatar": "http://localhost:5000/uploads/avatar/배경_카클스_yellow_856880820.png"
   },
   {
     "user_id": 13,
     "email": "user13@example.com",
-    "password": "Password1!",
+    "password": "$2b$12$/3/LTcnJLtxf9T3CBKtkDOAzodWqB0BgbKiYbLzMxuiOcM1YApNJi",
     "nickname": "user13",
     "avatar": "http://localhost:5000/uploads/avatar/two_cat_with_laptop_857015294.jpg"
+  },
+  {
+    "user_id": 14,
+    "email": "user14@example.com",
+    "password": "$2b$12$/3/LTcnJLtxf9T3CBKtkDOAzodWqB0BgbKiYbLzMxuiOcM1YApNJi",
+    "nickname": "user14",
+    "avatar": "http://localhost:5000/uploads/avatar/증명사진_857138913.jpg"
+  },
+  {
+    "user_id": 15,
+    "email": "user15@example.com",
+    "password": "$2b$12$tG8Bnlp1T904RsggUU8G0.J7lx1ZT2ZMEXGk5dB0jTWLk.fSJzA7W",
+    "nickname": "user15",
+    "avatar": "http://localhost:5000/uploads/avatar/배경_카클스_yellow_857142093.png"
+  },
+  {
+    "user_id": 16,
+    "email": "user16@example.com",
+    "password": "$2b$12$t/tDbjZqxWD3CffsEPW0dOoE2jBzSPLqn6LAEKqa6IqMpOq1wKf9m",
+    "nickname": "user166",
+    "avatar": "http://localhost:5000/uploads/avatar/스크린샷 2024-04-13 144018_857146224.png"
   }
 ]

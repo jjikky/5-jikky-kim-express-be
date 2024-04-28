@@ -7,17 +7,21 @@ const postsJsonPath = path.join(__dirname, '../', 'data', 'posts.json');
 const usersJsonPath = path.join(__dirname, '../', 'data', 'users.json');
 const IMAGE_PATH = 'http://localhost:5000/uploads/post';
 
-let posts = JSON.parse(fs.readFileSync(postsJsonPath));
-let users = JSON.parse(fs.readFileSync(usersJsonPath));
-
 exports.getAllPost = (req, res) => {
     try {
+        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
+        let users = JSON.parse(fs.readFileSync(usersJsonPath));
         const page = req.query.page * 1 || 1;
         const limit = req.query.limit * 1 || 10;
         //  page=5 & limit = 10  >>  40 data skip
         const skip = limit * (page - 1);
 
         let allPost = posts.slice(skip, limit * page);
+        allPost.forEach((post) => {
+            const user = users.find((user) => user.user_id == post.creator.user_id);
+            post.creator.avatar = user.avatar;
+            post.creator.nickname = user.nickname;
+        });
 
         res.status(200).json({
             message: 'success',
@@ -30,8 +34,12 @@ exports.getAllPost = (req, res) => {
 
 exports.getSinglePost = (req, res, next) => {
     try {
+        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
+        let users = JSON.parse(fs.readFileSync(usersJsonPath));
         const post_id = req.params.id * 1;
+
         let post = posts.find((post) => post.post_id === post_id);
+        const creator = users.find((user) => user.user_id == post.creator.user_id);
         if (!post) {
             return next(new appError('page not found', 404));
         }
@@ -41,9 +49,18 @@ exports.getSinglePost = (req, res, next) => {
         post.count.view++;
         fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
 
+        post.creator.avatar = creator.avatar;
+        post.creator.nickname = creator.nickname;
+        post.comments.forEach((comment) => {
+            let comment_creator = users.find((user) => user.user_id == comment.creator.user_id);
+            comment.creator.avatar = comment_creator.avatar;
+            comment.creator.nickname = comment_creator.nickname;
+        });
+
         res.status(200).json({
             message: 'success',
             post,
+            user_id: req.user.user_id,
         });
     } catch (error) {
         console.log(error);
@@ -52,16 +69,18 @@ exports.getSinglePost = (req, res, next) => {
 
 exports.createPost = (req, res, next) => {
     try {
+        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
         const { title, content } = req.body;
-        const { user_id, nickname, avatar } = req.user;
+        const { user_id } = req.user;
         const created_at = moment().format('YYYY-MM-DD HH:mm:ss');
         let image = req.file;
         let fileName = image.originalname.split('.');
         // NOTE : 파일명 중복 안되게 파일명에 현재시각 삽입
         const currentTime = Math.floor(new Date().getTime() / 2000);
+        const maxPostId = posts[posts.length - 1]?.post_id || 0;
 
         const newPost = {
-            post_id: posts.length + 1,
+            post_id: maxPostId,
             title,
             content,
             created_at: created_at,
@@ -73,8 +92,6 @@ exports.createPost = (req, res, next) => {
             },
             creator: {
                 user_id,
-                nickname,
-                avatar,
             },
             comments: [],
         };
@@ -91,6 +108,7 @@ exports.createPost = (req, res, next) => {
 };
 exports.updatePost = (req, res, next) => {
     try {
+        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
         const post_id = req.params.id * 1;
         let post = posts.find((post) => post.post_id === post_id);
         const { title, content } = req.body;
@@ -121,6 +139,7 @@ exports.updatePost = (req, res, next) => {
 
 exports.deletePost = (req, res, next) => {
     try {
+        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
         const post_id = req.params.id;
         let post = posts.find((post) => post.post_id == post_id);
         // 파일 삭제
@@ -151,6 +170,8 @@ function deletePostImage(post) {
 
 exports.createComment = (req, res, next) => {
     try {
+        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
+
         const post_id = req.params.post_id * 1;
         const content = req.body.comment;
         const user_id = req.user.user_id * 1;
@@ -158,24 +179,17 @@ exports.createComment = (req, res, next) => {
         const created_at = moment().format('YYYY-MM-DD HH:mm:ss');
 
         let post = posts.find((post) => post.post_id === post_id);
-        let user = users.find((user) => user.user_id === user_id);
+        const maxCommentId = post.comments[post.comments.length - 1]?.comment_id || 0;
+        const comment_id = maxCommentId + 1;
 
-        const nickname = user.nickname;
-        const avatar = user.avatar;
-        // comment_id 구현
-
-        const comment_id = post.comments.length + 1;
         const comment = {
             comment_id,
             creator: {
                 user_id,
-                nickname,
-                avatar,
             },
             content,
             created_at,
         };
-
         post.comments.push(comment);
 
         fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
@@ -190,10 +204,10 @@ exports.createComment = (req, res, next) => {
 };
 
 exports.updateComment = (req, res, next) => {
-    const content = req.body.comment;
-    const { post_id, comment_id } = req.params;
-    // update comment
     try {
+        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
+        const content = req.body.comment;
+        const { post_id, comment_id } = req.params;
         let post = posts.find((post) => post.post_id === post_id * 1);
         let comment = post.comments.find((comment) => comment.comment_id === comment_id * 1);
         comment.content = content;
@@ -209,9 +223,12 @@ exports.updateComment = (req, res, next) => {
 
 exports.deleteComment = (req, res, next) => {
     try {
+        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
         const { post_id, comment_id } = req.params;
         let post = posts.find((post) => post.post_id === post_id * 1);
-        let index = post.comments.indexOf(comment_id);
+
+        let index = post.comments.findIndex((comment) => comment.comment_id == comment_id);
+
         post.comments.splice(index, 1);
         fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
         res.status(200).json({

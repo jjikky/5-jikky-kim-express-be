@@ -9,20 +9,20 @@ const {
     updateComment,
     deleteComment,
 } = require('../controllers/postController');
-const { protect } = require('../controllers/authController');
 const { uploadPostImage } = require('../utils/multer');
+const { isLoggedIn } = require('../utils/middlewares');
 
 const postRouter = express.Router();
 
-postRouter.get('/', protect, getAllPost);
-postRouter.get('/:id', protect, getSinglePost);
+postRouter.get('/', isLoggedIn, getAllPost);
+postRouter.get('/:id', isLoggedIn, getSinglePost);
 
-postRouter.post('/:post_id/comment', protect, createComment);
-postRouter.patch('/:post_id/comment/:comment_id', protect, updateComment);
-postRouter.delete('/:post_id/comment/:comment_id', protect, deleteComment);
+postRouter.post('/:post_id/comment', isLoggedIn, createComment);
+postRouter.patch('/:post_id/comment/:comment_id', isLoggedIn, updateComment);
+postRouter.delete('/:post_id/comment/:comment_id', isLoggedIn, deleteComment);
 
-postRouter.post('/', protect, uploadPostImage.single('post_image'), createPost);
-postRouter.patch('/:id', protect, uploadPostImage.single('post_image'), updatePost);
-postRouter.delete('/:id', protect, deletePost);
+postRouter.post('/', isLoggedIn, uploadPostImage.single('post_image'), createPost);
+postRouter.patch('/:id', isLoggedIn, uploadPostImage.single('post_image'), updatePost);
+postRouter.delete('/:id', deletePost);
 
 module.exports = postRouter;
