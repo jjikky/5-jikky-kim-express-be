@@ -1,10 +1,12 @@
 const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 
 const avatarStorage = multer.diskStorage({
-    destination: (req, file, callback) => {
+    destination: (_, _, callback) => {
         callback(null, 'public/uploads/avatar');
     },
-    filename: (req, file, callback) => {
+    filename: (_, file, callback) => {
         const currentTime = Math.floor(new Date().getTime() / 2000);
         let fileName = file.originalname.split('.');
         const changedFileName = `${fileName[0]}_${currentTime}.${fileName[1]}`;
@@ -13,10 +15,10 @@ const avatarStorage = multer.diskStorage({
 });
 
 const postImageStorage = multer.diskStorage({
-    destination: (req, file, callback) => {
+    destination: (_, _, callback) => {
         callback(null, 'public/uploads/post');
     },
-    filename: (req, file, callback) => {
+    filename: (_, file, callback) => {
         const currentTime = Math.floor(new Date().getTime() / 2000);
         let fileName = file.originalname.split('.');
         const changedFileName = `${fileName[0]}_${currentTime}.${fileName[1]}`;
@@ -33,3 +35,23 @@ const limits = {
 
 exports.uploadAvatar = multer({ storage: avatarStorage, limits: limits });
 exports.uploadPostImage = multer({ storage: postImageStorage, limits: limits });
+
+exports.deletePostImage = (post) => {
+    const filename = post.post_image.substring(post.post_image.lastIndexOf('/') + 1);
+    const filePath = path.join(__dirname, '../', 'public', 'uploads', 'post', `${filename}`);
+    fs.unlinkSync(filePath, (err) => {
+        if (err) {
+            console.log(err);
+        }
+    });
+};
+
+exports.deleteAvatar = (user) => {
+    const filename = user.avatar.substring(user.avatar.lastIndexOf('/') + 1);
+    const filePath = path.join(__dirname, '../', 'public', 'uploads', 'avatar', `${filename}`);
+    fs.unlinkSync(filePath, (err) => {
+        if (err) {
+            console.log(err);
+        }
+    });
+};

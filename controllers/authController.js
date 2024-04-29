@@ -3,9 +3,11 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const appError = require('../utils/appError');
+const { deletePostImage, deleteAvatar } = require('../utils/multer');
 
 const IMAGE_PATH = 'http://localhost:5000/uploads/avatar';
 const usersJsonPath = path.join(__dirname, '../', 'data', 'users.json');
+const postsJsonPath = path.join(__dirname, '../', 'data', 'posts.json');
 
 exports.register = async (req, res, next) => {
     try {
@@ -163,35 +165,54 @@ exports.updateUser = (req, res, next) => {
     }
 };
 
-exports.deleteUser = (req, res, next) => {
+exports.deleteUser = async (req, res, next) => {
     try {
         let users = JSON.parse(fs.readFileSync(usersJsonPath));
+        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
         const user_id = req.user.user_id;
-        let user = users.find((user) => user.user_id === user_id);
+        let user = users.find((user) => user.user_id == user_id);
 
-        // TODO
-        // 유저가 남긴 댓글 삭제
-        // 유저가 남긴 게시글 삭제
-        // 유저가 남긴 게시글 이미지 삭제
+        if (!user) {
+            return next(new appError('User not found', 404));
+        }
+
+        for (let i = 0; i < posts.length; i++) {
+            const post = posts[i];
+            if (post.creator.user_id == user_id) {
+                // 유저가 남긴 게시글 이미지 삭제
+                deletePostImage(post);
+                // 유저가 남긴 게시글 삭제
+                posts.splice(i, 1);
+                // 현재 인덱스가 한 칸 뒤로 이동했으므로 다음 요소를 체크
+                i--;
+            }
+            // 유저가 남긴 댓글 삭제
+            for (let j = 0; j < post.comments.length; j++) {
+                const comment = post.comments[j];
+                if (comment.creator.user_id == user_id) {
+                    post.comments.splice(j, 1);
+                    j--;
+                }
+            }
+        }
 
         deleteAvatar(user);
-        users = users.filter((user) => user.user_id !== user_id);
-        fs.writeFileSync(usersJsonPath, JSON.stringify(users, null, 2), 'utf8');
-        res.status(200).json({
-            message: 'User Deleted Successfully',
+        users = users.filter((user) => user.user_id != user_id);
+        await fs.writeFileSync(usersJsonPath, JSON.stringify(users, null, 2), 'utf8');
+        await fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
+        req.logout(req.user, (err) => {
+            if (err) {
+                return next(err);
+            }
+            req.session.destroy(() => {
+                req.session;
+            });
+            res.status(200).json({
+                message: 'User Deleted Successfully',
+            });
         });
     } catch (err) {
         console.log(err);
         return next(new appError('Internal Server Error', 500));
     }
 };
-
-function deleteAvatar(user) {
-    const filename = user.avatar.substring(user.avatar.lastIndexOf('/') + 1);
-    const filePath = path.join(__dirname, '../', 'public', 'uploads', 'avatar', `${filename}`);
-    fs.unlinkSync(filePath, (err) => {
-        if (err) {
-            console.log(err);
-        }
-    });
-}
