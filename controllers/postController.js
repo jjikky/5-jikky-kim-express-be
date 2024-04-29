@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
 const appError = require('../utils/appError');
+const { deletePostImage } = require('../utils/multer');
 
 const postsJsonPath = path.join(__dirname, '../', 'data', 'posts.json');
 const usersJsonPath = path.join(__dirname, '../', 'data', 'users.json');
@@ -80,7 +81,7 @@ exports.createPost = (req, res, next) => {
         const maxPostId = posts[posts.length - 1]?.post_id || 0;
 
         const newPost = {
-            post_id: maxPostId,
+            post_id: maxPostId + 1,
             title,
             content,
             created_at: created_at,
@@ -157,16 +158,6 @@ exports.deletePost = (req, res, next) => {
         next(new appError('Internal Server Error', 500));
     }
 };
-
-function deletePostImage(post) {
-    const filename = post.post_image.substring(post.post_image.lastIndexOf('/') + 1);
-    const filePath = path.join(__dirname, '../', 'public', 'uploads', 'post', `${filename}`);
-    fs.unlinkSync(filePath, (err) => {
-        if (err) {
-            console.log(err);
-        }
-    });
-}
 
 exports.createComment = (req, res, next) => {
     try {
