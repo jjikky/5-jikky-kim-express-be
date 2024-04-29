@@ -5,9 +5,9 @@ const fs = require('fs');
 const bcrypt = require('bcrypt');
 
 const usersJsonPath = path.join(__dirname, '../', 'data', 'users.json');
-let users = JSON.parse(fs.readFileSync(usersJsonPath));
 
 module.exports = () => {
+    let users = JSON.parse(fs.readFileSync(usersJsonPath));
     passport.use(
         new LocalStrategy(
             {
