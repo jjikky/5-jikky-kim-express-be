@@ -3,10 +3,10 @@ const fs = require('fs');
 const path = require('path');
 
 const avatarStorage = multer.diskStorage({
-    destination: (_, _, callback) => {
+    destination: (req, file, callback) => {
         callback(null, 'public/uploads/avatar');
     },
-    filename: (_, file, callback) => {
+    filename: (req, file, callback) => {
         const currentTime = Math.floor(new Date().getTime() / 2000);
         let fileName = file.originalname.split('.');
         const changedFileName = `${fileName[0]}_${currentTime}.${fileName[1]}`;
@@ -15,10 +15,10 @@ const avatarStorage = multer.diskStorage({
 });
 
 const postImageStorage = multer.diskStorage({
-    destination: (_, _, callback) => {
+    destination: (req, file, callback) => {
         callback(null, 'public/uploads/post');
     },
-    filename: (_, file, callback) => {
+    filename: (req, file, callback) => {
         const currentTime = Math.floor(new Date().getTime() / 2000);
         let fileName = file.originalname.split('.');
         const changedFileName = `${fileName[0]}_${currentTime}.${fileName[1]}`;
