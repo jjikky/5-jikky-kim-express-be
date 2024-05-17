@@ -7,7 +7,6 @@ const bcrypt = require('bcrypt');
 const usersJsonPath = path.join(__dirname, '../', 'data', 'users.json');
 
 module.exports = () => {
-    let users = JSON.parse(fs.readFileSync(usersJsonPath));
     passport.use(
         new LocalStrategy(
             {
@@ -17,6 +16,7 @@ module.exports = () => {
             },
             async (email, password, done) => {
                 try {
+                    let users = JSON.parse(fs.readFileSync(usersJsonPath));
                     const exUser = users.find((user) => user.email == email);
                     if (exUser) {
                         const result = await bcrypt.compare(password, exUser.password);
