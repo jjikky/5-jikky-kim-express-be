@@ -1,62 +1,75 @@
-const fs = require('fs');
-const path = require('path');
+const db = require('../db');
 const moment = require('moment');
 const appError = require('../utils/appError');
 const { deletePostImage } = require('../utils/multer');
 
-const postsJsonPath = path.join(__dirname, '../', 'data', 'posts.json');
-const usersJsonPath = path.join(__dirname, '../', 'data', 'users.json');
 const IMAGE_PATH = 'http://localhost:5000/uploads/post';
 
-exports.getAllPost = (req, res) => {
+exports.getAllPost = async (req, res) => {
     try {
-        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
-        let users = JSON.parse(fs.readFileSync(usersJsonPath));
         const page = req.query.page * 1 || 1;
         const limit = req.query.limit * 1 || 10;
         //  page=5 & limit = 10  >>  40 data skip
         const skip = limit * (page - 1);
 
-        let allPost = posts.slice(skip, limit * page);
-        allPost.forEach((post) => {
-            const user = users.find((user) => user.user_id == post.creator.user_id);
-            post.creator.avatar = user.avatar;
-            post.creator.nickname = user.nickname;
-        });
+        const postsSql = `
+        SELECT 
+          p.*, 
+          u.avatar AS creator_avatar, 
+          u.nickname AS creator_nickname
+        FROM posts as p
+        JOIN USERS as u ON p.creator = u.user_id 
+        WHERE p.deleted_at IS NULL 
+        ORDER BY p.created_at DESC
+        LIMIT ? OFFSET ?`;
+
+        const [posts] = await db.execute(postsSql, [limit + '', skip + '']);
 
         res.status(200).json({
             message: 'success',
-            posts: allPost,
+            posts,
         });
     } catch (error) {
         console.log(error);
     }
 };
 
-exports.getSinglePost = (req, res, next) => {
+exports.getSinglePost = async (req, res, next) => {
     try {
-        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
-        let users = JSON.parse(fs.readFileSync(usersJsonPath));
         const post_id = req.params.id * 1;
 
-        let post = posts.find((post) => post.post_id === post_id);
-        const creator = users.find((user) => user.user_id == post.creator.user_id);
-        if (!post) {
-            return next(new appError('page not found', 404));
+        const postSql = `
+      SELECT 
+        POSTS.*, 
+        USERS.avatar AS creator_avatar, 
+        USERS.nickname AS creator_nickname
+      FROM POSTS 
+      JOIN USERS ON POSTS.creator = USERS.user_id 
+      WHERE POSTS.post_id = ? AND POSTS.deleted_at IS NULL`;
+
+        const [posts] = await db.execute(postSql, [post_id]);
+        if (posts.length === 0) {
+            return next(new appError('Post not found', 404));
         }
 
-        // 조회수 증가
-        // TODO : user ip 기반 제한 ?
-        post.count.view++;
-        fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
+        const post = posts[0];
 
-        post.creator.avatar = creator.avatar;
-        post.creator.nickname = creator.nickname;
-        post.comments.forEach((comment) => {
-            let comment_creator = users.find((user) => user.user_id == comment.creator.user_id);
-            comment.creator.avatar = comment_creator.avatar;
-            comment.creator.nickname = comment_creator.nickname;
-        });
+        // 댓글 가져오기
+        const commentsSql = `
+      SELECT 
+        COMMENTS.*, 
+        USERS.avatar AS creator_avatar, 
+        USERS.nickname AS creator_nickname
+      FROM COMMENTS 
+      JOIN USERS ON COMMENTS.user_id = USERS.user_id 
+      WHERE COMMENTS.post_id = ? AND COMMENTS.deleted_at IS NULL`;
+
+        const [comments] = await db.execute(commentsSql, [post_id]);
+        post.comments = comments;
+
+        // 조회수 증가
+        const updateViewCountSql = 'UPDATE POSTS SET count_view = count_view + 1 WHERE post_id = ?';
+        await db.execute(updateViewCountSql, [post_id]);
 
         res.status(200).json({
             message: 'success',
