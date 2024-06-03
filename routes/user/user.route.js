@@ -8,10 +8,10 @@ const {
     changePassword,
     updateUser,
     deleteUser,
-} = require('../routes/user/authController');
-const { getSingleUser } = require('../routes/user/user.controller');
-const { isLoggedIn, isNotLoggedIn, autoLogin } = require('../utils/middlewares');
-const { uploadAvatar } = require('../utils/multer');
+    getSingleUser,
+} = require('./user.controller');
+const { isLoggedIn, isNotLoggedIn, autoLogin } = require('../../utils/middlewares');
+const { uploadAvatar } = require('../../utils/multer');
 const userRouter = express.Router();
 
 // authController
