@@ -1,5 +1,6 @@
 const db = require('../db');
 const moment = require('moment');
+const fs = require('fs');
 const appError = require('../utils/appError');
 const { deletePostImage } = require('../utils/multer');
 
@@ -81,36 +82,28 @@ exports.getSinglePost = async (req, res, next) => {
     }
 };
 
-exports.createPost = (req, res, next) => {
+exports.createPost = async (req, res, next) => {
     try {
-        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
         const { title, content } = req.body;
         const { user_id } = req.user;
-        const created_at = moment().format('YYYY-MM-DD HH:mm:ss');
         let image = req.file;
         let fileName = image.originalname.split('.');
-        // NOTE : 파일명 중복 안되게 파일명에 현재시각 삽입
         const currentTime = Math.floor(new Date().getTime() / 2000);
-        const maxPostId = posts[posts.length - 1]?.post_id || 0;
 
         const newPost = {
-            post_id: maxPostId + 1,
             title,
             content,
-            created_at: created_at,
             post_image: `${IMAGE_PATH}/${fileName[0]}_${currentTime}.${fileName[1]}`,
-            count: {
-                like: 0,
-                comment: 0,
-                view: 0,
-            },
-            creator: {
-                user_id,
-            },
-            comments: [],
+            creator: user_id,
         };
-        posts.push(newPost);
-        fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
+
+        const createPostSql = `
+      INSERT INTO POSTS (title, content,post_image, creator)
+      VALUES (?, ?, ?, ?)`;
+        const [result] = await db.execute(createPostSql, Object.values(newPost));
+
+        newPost.post_id = result.insertId;
+
         res.status(201).json({
             message: 'post created successfully',
             newPost,
@@ -120,27 +113,29 @@ exports.createPost = (req, res, next) => {
         next(new appError('Internal Server Error', 500));
     }
 };
-exports.updatePost = (req, res, next) => {
+exports.updatePost = async (req, res, next) => {
     try {
-        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
         const post_id = req.params.id * 1;
-        let post = posts.find((post) => post.post_id === post_id);
         const { title, content } = req.body;
-        post.title = title;
-        post.content = content;
 
-        if (req.file !== undefined) {
-            // 기존 이미지 삭제
-            deletePostImage(post);
+        let updateSql = 'UPDATE POSTS SET title = ?, content = ?';
+        const params = [title, content];
 
+        if (req.file) {
             // 이미지 업데이트 처리
             let image = req.file;
             let fileName = image.originalname.split('.');
             const currentTime = Math.floor(new Date().getTime() / 2000);
-            post.post_image = `${IMAGE_PATH}/${fileName[0]}_${currentTime}.${fileName[1]}`;
+            const post_image = `${IMAGE_PATH}/${fileName[0]}_${currentTime}.${fileName[1]}`;
+
+            updateSql += ', post_image = ?';
+            params.push(post_image);
         }
 
-        fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
+        updateSql += ' WHERE post_id = ?';
+        params.push(post_id);
+
+        await db.execute(updateSql, params);
 
         res.status(200).json({
             message: 'post updated successfully',
@@ -151,18 +146,14 @@ exports.updatePost = (req, res, next) => {
     }
 };
 
-exports.deletePost = (req, res, next) => {
+exports.deletePost = async (req, res, next) => {
     try {
-        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
-        const post_id = req.params.id;
-        let post = posts.find((post) => post.post_id == post_id);
-        // 파일 삭제
-        deletePostImage(post);
+        const post_id = req.params.id * 1;
 
-        // 더미데이터에서 해당 객체 삭제
-        let index = posts.indexOf(post);
-        posts.splice(index, 1);
-        fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
+        // 게시글 논리적 삭제
+        const deletePostSql = 'UPDATE POSTS SET deleted_at = CURRENT_TIMESTAMP WHERE post_id = ?';
+        await db.execute(deletePostSql, [post_id]);
+
         res.status(200).json({
             message: 'post deleted successfully',
         });
