@@ -1,26 +1,41 @@
-# 목차
-- [커뮤니티 게시판 ver 1.1](#커뮤니티-게시판-ver-11)
+# **프로젝트 소개**
 
-- [커뮤니티 게시판 ver 1.2](#커뮤니티-게시판-ver-12)
+기본적인 게시판의 형태를 띄고 있는 커뮤니티 프로젝트로 기술간의 장단점을 체감하기 위해 버전에 따라 다른 기술로 구현
+
+- ver1
+    - ver1.1 : `vanila` `express` `json`
+        - FE : https://github.com/jjikky/5-jikky-kim-vanila-fe
+        - BE : https://github.com/jjikky/5-jikky-kim-express-be/tree/json-archive
+          
+    - ver1.2 : `jwt / cookie&session` 두가지 방식의 인증 인가 추가 ( 브랜치로 분기 )
+        - `cookie&session`
+            - FE : https://github.com/jjikky/5-jikky-kim-vanila-fe
+            - BE : https://github.com/jjikky/5-jikky-kim-express-be/tree/json-archive
+        - `jwt`
+            - FE : https://github.com/jjikky/5-jikky-kim-vanila-fe/tree/jwt-archive
+            - BE : https://github.com/jjikky/5-jikky-kim-express-be/tree/jwt-archive
+              
+- ver2
+    - ver2.1 :  `react`  `express`  `json`
+        - FE를 react로 변경 : https://github.com/jjikky/5-jikky-kim-react-fe/tree/json-archive
+          
+    - ver2.2 :  `react`  `express`  `mySQL`
+        - 데이터 저장소 json → mySQL 변경
+        - FE : https://github.com/jjikky/5-jikky-kim-react-fe/tree/main
+        - BE : https://github.com/jjikky/5-jikky-kim-express-be/tree/main
+            - Service Layer Architecture로 변경
+              
+- ver3  : `react`  `spring`  `mySQL`
+  - 아직 미구현
+
+
+
 
 # 커뮤니티 게시판 ver 1.1
 
 ## 프로젝트 기간
 
 2024.04.05 ~ 2024.04.22 ( 12 영업일 )
-
-## **프로젝트 소개**
-
-기본적인 게시판의 형태를 띄고 있는 커뮤니티 프로젝트로 기술간의 장단점을 체감하기 위해 버전에 따라 다른 기술로 구현
-
-
-ver.1 : vanilaJS + express
-[🔗FE : vanila JS](https://github.com/jjikky/5-jikky-kim-vanila-fe)   [🔗BE : Express](https://github.com/jjikky/5-jikky-kim-express-be)
-
-ver.2 : react + express
-[🔗FE : React](https://github.com/jjikky/5-jikky-kim-react-fe) 
-
-ver.3 : react + spring + mySQL
 
 ## GitHub  [🔗FE : vanila JS](https://github.com/jjikky/5-jikky-kim-vanila-fe)   [🔗BE : Express](https://github.com/jjikky/5-jikky-kim-express-be)
 
