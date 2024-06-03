@@ -25,6 +25,6 @@ userRouter.patch('/password/change', isLoggedIn, changePassword);
 userRouter.patch('/', isLoggedIn, uploadAvatar.single('avatar'), updateUser);
 userRouter.delete('/', isLoggedIn, deleteUser);
 
-userRouter.get('/change', isLoggedIn, getSingleUser);
+userRouter.get('/', isLoggedIn, getSingleUser);
 
 module.exports = userRouter;
