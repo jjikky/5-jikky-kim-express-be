@@ -189,12 +189,17 @@ exports.deleteUser = async (req, res, next) => {
         }
 
         // 사용자가 작성한 게시글 논리적 삭제
-        const postImageSql = 'SELECT post_image FROM POSTS WHERE user_id = ? AND deleted_at IS NULL';
+        const postImageSql = 'SELECT post_id FROM POSTS WHERE user_id = ? AND deleted_at IS NULL';
         const [posts] = await connection.execute(postImageSql, [user_id]);
         for (const post of posts) {
+            console.log(post.post_id);
             const deletePostSql = 'UPDATE POSTS SET deleted_at = CURRENT_TIMESTAMP WHERE post_id = ?';
             await connection.execute(deletePostSql, [post.post_id]);
         }
+
+        // 사용자가 작성한 댓글 논리적 삭제
+        const deleteCommentsSql = 'UPDATE COMMENTS SET deleted_at = CURRENT_TIMESTAMP WHERE user_id = ?';
+        await connection.execute(deleteCommentsSql, [user_id]);
 
         await connection.commit();
 
