@@ -163,34 +163,29 @@ exports.deletePost = async (req, res, next) => {
     }
 };
 
-exports.createComment = (req, res, next) => {
+exports.createComment = async (req, res, next) => {
     try {
-        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
-
         const post_id = req.params.post_id * 1;
-        const content = req.body.comment;
-        const user_id = req.user.user_id * 1;
+        const { comment } = req.body;
+        const { user_id } = req.user;
 
-        const created_at = moment().format('YYYY-MM-DD HH:mm:ss');
-
-        let post = posts.find((post) => post.post_id === post_id);
-        const maxCommentId = post.comments[post.comments.length - 1]?.comment_id || 0;
-        const comment_id = maxCommentId + 1;
-
-        const comment = {
-            comment_id,
-            creator: {
-                user_id,
-            },
-            content,
-            created_at,
+        const newComment = {
+            post_id,
+            user_id,
+            comment,
         };
-        post.comments.push(comment);
 
-        fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
+        const createCommentSql = `
+      INSERT INTO COMMENTS (post_id, user_id, content)
+      VALUES (?, ?, ?)`;
+        await db.execute(createCommentSql, Object.values(newComment));
+
+        // 댓글 수 증가
+        const updateCommentCountSql = 'UPDATE POSTS SET count_comment = count_comment + 1 WHERE post_id = ?';
+        await db.execute(updateCommentCountSql, [post_id]);
+
         res.status(201).json({
             message: 'comment created successfully',
-            post,
         });
     } catch (err) {
         console.log(err);
