@@ -1,10 +1,8 @@
 const db = require('../db');
-const moment = require('moment');
 const fs = require('fs');
 const appError = require('../utils/appError');
-const { deletePostImage } = require('../utils/multer');
 
-const IMAGE_PATH = 'http://localhost:5000/uploads/post';
+const IMAGE_PATH = '/uploads/post';
 
 exports.getAllPost = async (req, res) => {
     try {

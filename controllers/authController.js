@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 const appError = require('../utils/appError');
 
-const IMAGE_PATH = 'http://localhost:5000/uploads/avatar';
+const IMAGE_PATH = '/uploads/avatar';
 const db = require('../db');
 
 exports.register = async (req, res, next) => {
