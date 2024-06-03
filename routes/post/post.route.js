@@ -8,9 +8,9 @@ const {
     createComment,
     updateComment,
     deleteComment,
-} = require('../routes/post/post.controller');
-const { uploadPostImage } = require('../utils/multer');
-const { isLoggedIn } = require('../utils/middlewares');
+} = require('./post.controller');
+const { uploadPostImage } = require('../../utils/multer');
+const { isLoggedIn } = require('../../utils/middlewares');
 
 const postRouter = express.Router();
 
