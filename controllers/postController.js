@@ -17,7 +17,7 @@ exports.getAllPost = async (req, res) => {
           u.avatar AS creator_avatar, 
           u.nickname AS creator_nickname
         FROM posts as p
-        JOIN USERS as u ON p.creator = u.user_id 
+        JOIN USERS as u ON p.user_id = u.user_id 
         WHERE p.deleted_at IS NULL 
         ORDER BY p.created_at DESC
         LIMIT ? OFFSET ?`;
@@ -43,7 +43,7 @@ exports.getSinglePost = async (req, res, next) => {
         USERS.avatar AS creator_avatar, 
         USERS.nickname AS creator_nickname
       FROM POSTS 
-      JOIN USERS ON POSTS.creator = USERS.user_id 
+      JOIN USERS ON POSTS.user_id = USERS.user_id 
       WHERE POSTS.post_id = ? AND POSTS.deleted_at IS NULL`;
 
         const [posts] = await db.execute(postSql, [post_id]);
@@ -92,11 +92,11 @@ exports.createPost = async (req, res, next) => {
             title,
             content,
             post_image: `${IMAGE_PATH}/${fileName[0]}_${currentTime}.${fileName[1]}`,
-            creator: user_id,
+            user_id,
         };
 
         const createPostSql = `
-      INSERT INTO POSTS (title, content,post_image, creator)
+      INSERT INTO POSTS (title, content,post_image, user_id)
       VALUES (?, ?, ?, ?)`;
         const [result] = await db.execute(createPostSql, Object.values(newPost));
 

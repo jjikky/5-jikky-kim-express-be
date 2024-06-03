@@ -189,7 +189,7 @@ exports.deleteUser = async (req, res, next) => {
         }
 
         // 사용자가 작성한 게시글 논리적 삭제
-        const postImageSql = 'SELECT post_image FROM POSTS WHERE creator = ? AND deleted_at IS NULL';
+        const postImageSql = 'SELECT post_image FROM POSTS WHERE user_id = ? AND deleted_at IS NULL';
         const [posts] = await connection.execute(postImageSql, [user_id]);
         for (const post of posts) {
             const deletePostSql = 'UPDATE POSTS SET deleted_at = CURRENT_TIMESTAMP WHERE post_id = ?';
