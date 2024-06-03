@@ -191,15 +191,14 @@ exports.createComment = async (req, res, next) => {
     }
 };
 
-exports.updateComment = (req, res, next) => {
+exports.updateComment = async (req, res, next) => {
     try {
-        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
-        const content = req.body.comment;
         const { post_id, comment_id } = req.params;
-        let post = posts.find((post) => post.post_id === post_id * 1);
-        let comment = post.comments.find((comment) => comment.comment_id === comment_id * 1);
-        comment.content = content;
-        fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
+        const { comment } = req.body;
+
+        const updateCommentSql = 'UPDATE COMMENTS SET content = ? WHERE comment_id = ? AND post_id = ?';
+        await db.execute(updateCommentSql, [comment, comment_id, post_id]);
+
         res.status(200).json({
             message: 'comment updated successfully',
         });
@@ -209,21 +208,38 @@ exports.updateComment = (req, res, next) => {
     }
 };
 
-exports.deleteComment = (req, res, next) => {
+exports.deleteComment = async (req, res, next) => {
+    const connection = await db.getConnection();
+
     try {
-        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
+        await connection.beginTransaction();
+
         const { post_id, comment_id } = req.params;
-        let post = posts.find((post) => post.post_id === post_id * 1);
 
-        let index = post.comments.findIndex((comment) => comment.comment_id == comment_id);
+        // 댓글 논리적 삭제
+        const deleteCommentSql =
+            'UPDATE COMMENTS SET deleted_at = CURRENT_TIMESTAMP WHERE comment_id = ? AND post_id = ?';
+        const [deleteCommentResult] = await connection.execute(deleteCommentSql, [comment_id, post_id]);
 
-        post.comments.splice(index, 1);
-        fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
+        if (deleteCommentResult.affectedRows === 0) {
+            await connection.rollback();
+            return next(new appError('Comment not found', 404));
+        }
+
+        // 댓글 수 감소
+        const updateCommentCountSql = 'UPDATE POSTS SET count_comment = count_comment - 1 WHERE post_id = ?';
+        await connection.execute(updateCommentCountSql, [post_id]);
+
+        await connection.commit();
+
         res.status(200).json({
             message: 'comment deleted successfully',
         });
     } catch (err) {
+        await connection.rollback();
         console.log(err);
         next(new appError('Internal Server Error', 500));
+    } finally {
+        connection.release();
     }
 };
