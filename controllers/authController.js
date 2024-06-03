@@ -1,18 +1,12 @@
-const fs = require('fs');
-const path = require('path');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const appError = require('../utils/appError');
-const { deletePostImage, deleteAvatar } = require('../utils/multer');
 
-const IMAGE_PATH = 'http://localhost:5000/uploads/avatar';
-const usersJsonPath = path.join(__dirname, '../', 'data', 'users.json');
-const postsJsonPath = path.join(__dirname, '../', 'data', 'posts.json');
+const IMAGE_PATH = '/uploads/avatar';
+const db = require('../db');
 
 exports.register = async (req, res, next) => {
     try {
-        let users = JSON.parse(fs.readFileSync(usersJsonPath));
-        // TODO : validate 필요
         const { nickname, email, password } = req.body;
 
         let image = req.file;
@@ -20,19 +14,18 @@ exports.register = async (req, res, next) => {
         const currentTime = Math.floor(new Date().getTime() / 2000);
         const hash = await bcrypt.hash(password, 12);
         const newUser = {
-            user_id: users.length + 1,
             email,
             password: hash,
             nickname,
             avatar: `${IMAGE_PATH}/${fileName[0]}_${currentTime}.${fileName[1]}`,
         };
 
-        users.push(newUser);
-        fs.writeFileSync(usersJsonPath, JSON.stringify(users, null, 2), 'utf8');
+        const sql = 'INSERT INTO USERS (email, password, nickname, avatar) VALUES (?, ?, ?, ?)';
+        const [result] = await db.execute(sql, [newUser.email, newUser.password, newUser.nickname, newUser.avatar]);
 
         res.status(201).json({
             message: 'user registered successfully',
-            user_id: newUser.user_id,
+            user_id: result.insertId,
         });
     } catch (err) {
         console.log(err);
@@ -80,14 +73,13 @@ exports.logout = (req, res, next) => {
     });
 };
 
-exports.isNicknameExist = (req, res) => {
-    let users = JSON.parse(fs.readFileSync(usersJsonPath));
+exports.isNicknameExist = async (req, res) => {
     const nickname = req.query.nickname;
-    const user = users.find((user) => user.nickname === nickname);
+    const sql = 'SELECT * FROM USERS WHERE nickname = ? AND deleted_at IS NULL';
+    const [rows] = await db.execute(sql, [nickname]);
 
-    // 중복 : true
     let isExist = false;
-    if (user !== undefined) {
+    if (rows.length > 0) {
         isExist = true;
     }
     res.status(200).json({
@@ -95,14 +87,13 @@ exports.isNicknameExist = (req, res) => {
         isExist,
     });
 };
-exports.isEmailExist = (req, res) => {
-    let users = JSON.parse(fs.readFileSync(usersJsonPath));
+exports.isEmailExist = async (req, res) => {
     const email = req.query.email;
-    const user = users.find((user) => user.email === email);
+    const sql = 'SELECT * FROM USERS WHERE email = ? AND deleted_at IS NULL';
+    const [rows] = await db.execute(sql, [email]);
 
-    // 중복 : true
     let isExist = false;
-    if (user !== undefined) {
+    if (rows.length > 0) {
         isExist = true;
     }
     res.status(200).json({
@@ -113,15 +104,22 @@ exports.isEmailExist = (req, res) => {
 
 exports.changePassword = async (req, res, next) => {
     try {
-        let users = JSON.parse(fs.readFileSync(usersJsonPath));
-        const password = req.body.password;
-        const user_id = req.user.user_id * 1;
-        let user = users.find((user) => user.user_id === user_id);
+        const { password } = req.body;
+        const user_id = req.user.user_id;
+
+        const sql = 'SELECT password FROM USERS WHERE user_id = ? AND deleted_at IS NULL';
+        const [rows] = await db.execute(sql, [user_id]);
+        if (rows.length === 0) {
+            return next(new appError('User not found', 404));
+        }
+
+        const user = rows[0];
         const isSamePassword = await bcrypt.compare(password, user.password);
         if (isSamePassword) return next(new appError('Same As The Original Password', 400));
+
         const hash = await bcrypt.hash(password, 12);
-        user.password = hash;
-        fs.writeFileSync(usersJsonPath, JSON.stringify(users, null, 2), 'utf8');
+        const updateSql = 'UPDATE USERS SET password = ? WHERE user_id = ?';
+        await db.execute(updateSql, [hash, user_id]);
 
         res.status(201).json({
             message: 'Password Changed Successfully',
@@ -133,31 +131,40 @@ exports.changePassword = async (req, res, next) => {
     }
 };
 
-exports.updateUser = (req, res, next) => {
+exports.updateUser = async (req, res, next) => {
     try {
-        let users = JSON.parse(fs.readFileSync(usersJsonPath));
         const user_id = req.user.user_id;
         const { nickname, email } = req.body;
-        let user = users.find((user) => user.user_id === user_id);
-        user.nickname = nickname;
-        user.email = email;
+        let avatar = null;
 
-        if (req.file !== undefined) {
-            // 기존 이미지 삭제
-            deleteAvatar(user);
+        if (req.file) {
+            // 기존 이미지 삭제 -> ver 2.2에선 삭제 안하고 다 보존
+            // const sql = 'SELECT avatar FROM USERS WHERE user_id = ? AND deleted_at IS NULL';
+            // const [rows] = await db.execute(sql, [user_id]);
+            // if (rows.length > 0) {
+            //     deleteAvatar(rows[0]);
+            // }
 
             // 이미지 업데이트 처리
             let image = req.file;
             let fileName = image.originalname.split('.');
             const currentTime = Math.floor(new Date().getTime() / 2000);
-            user.avatar = `${IMAGE_PATH}/${fileName[0]}_${currentTime}.${fileName[1]}`;
+            avatar = `${IMAGE_PATH}/${fileName[0]}_${currentTime}.${fileName[1]}`;
         }
+        const updateSql = avatar
+            ? 'UPDATE USERS SET nickname = ?, email = ?, avatar = ? WHERE user_id = ?'
+            : 'UPDATE USERS SET nickname = ?, email = ? WHERE user_id = ?';
+        const params = avatar ? [nickname, email, avatar, user_id] : [nickname, email, user_id];
 
-        fs.writeFileSync(usersJsonPath, JSON.stringify(users, null, 2), 'utf8');
+        await db.execute(updateSql, params);
+
+        const sql = 'SELECT * FROM USERS WHERE user_id = ? AND deleted_at IS NULL';
+        const [updatedUserRows] = await db.execute(sql, [user_id]);
+        const updatedUser = updatedUserRows[0];
 
         res.status(201).json({
             message: 'User Updated Successfully',
-            user,
+            user: updatedUser,
         });
     } catch (error) {
         console.log(error);
@@ -166,49 +173,39 @@ exports.updateUser = (req, res, next) => {
 };
 
 exports.deleteUser = async (req, res, next) => {
+    const connection = await db.getConnection();
     try {
-        let users = JSON.parse(fs.readFileSync(usersJsonPath));
-        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
+        await connection.beginTransaction();
         const user_id = req.user.user_id;
-        let user = users.find((user) => user.user_id == user_id);
 
-        if (!user) {
+        // 사용자 논리적 삭제
+        const deleteUserSql =
+            'UPDATE USERS SET deleted_at = CURRENT_TIMESTAMP WHERE user_id = ? AND deleted_at IS NULL';
+        const [result] = await connection.execute(deleteUserSql, [user_id]);
+
+        if (result.affectedRows === 0) {
+            await connection.rollback();
             return next(new appError('User not found', 404));
         }
 
-        for (let i = 0; i < posts.length; i++) {
-            const post = posts[i];
-            if (post.creator.user_id == user_id) {
-                // 유저가 남긴 게시글 이미지 삭제
-                deletePostImage(post);
-                // 유저가 남긴 게시글 삭제
-                posts.splice(i, 1);
-                // 현재 인덱스가 한 칸 뒤로 이동했으므로 다음 요소를 체크
-                i--;
-            }
-            // 유저가 남긴 댓글 삭제
-            for (let j = 0; j < post.comments.length; j++) {
-                const comment = post.comments[j];
-                if (comment.creator.user_id == user_id) {
-                    post.comments.splice(j, 1);
-                    j--;
-                }
-            }
+        // 사용자가 작성한 게시글 논리적 삭제
+        const postImageSql = 'SELECT post_image FROM POSTS WHERE user_id = ? AND deleted_at IS NULL';
+        const [posts] = await connection.execute(postImageSql, [user_id]);
+        for (const post of posts) {
+            const deletePostSql = 'UPDATE POSTS SET deleted_at = CURRENT_TIMESTAMP WHERE post_id = ?';
+            await connection.execute(deletePostSql, [post.post_id]);
         }
 
-        deleteAvatar(user);
-        users = users.filter((user) => user.user_id != user_id);
-        await fs.writeFileSync(usersJsonPath, JSON.stringify(users, null, 2), 'utf8');
-        await fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
+        await connection.commit();
+
         req.logout(req.user, (err) => {
             if (err) {
                 return next(err);
             }
             req.session.destroy(() => {
-                req.session;
-            });
-            res.status(200).json({
-                message: 'User Deleted Successfully',
+                res.status(200).json({
+                    message: 'User Deleted Successfully',
+                });
             });
         });
     } catch (err) {

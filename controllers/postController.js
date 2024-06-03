@@ -1,62 +1,74 @@
+const db = require('../db');
 const fs = require('fs');
-const path = require('path');
-const moment = require('moment');
 const appError = require('../utils/appError');
-const { deletePostImage } = require('../utils/multer');
 
-const postsJsonPath = path.join(__dirname, '../', 'data', 'posts.json');
-const usersJsonPath = path.join(__dirname, '../', 'data', 'users.json');
-const IMAGE_PATH = 'http://localhost:5000/uploads/post';
+const IMAGE_PATH = '/uploads/post';
 
-exports.getAllPost = (req, res) => {
+exports.getAllPost = async (req, res) => {
     try {
-        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
-        let users = JSON.parse(fs.readFileSync(usersJsonPath));
         const page = req.query.page * 1 || 1;
         const limit = req.query.limit * 1 || 10;
         //  page=5 & limit = 10  >>  40 data skip
         const skip = limit * (page - 1);
 
-        let allPost = posts.slice(skip, limit * page);
-        allPost.forEach((post) => {
-            const user = users.find((user) => user.user_id == post.creator.user_id);
-            post.creator.avatar = user.avatar;
-            post.creator.nickname = user.nickname;
-        });
+        const postsSql = `
+        SELECT 
+          p.*, 
+          u.avatar AS creator_avatar, 
+          u.nickname AS creator_nickname
+        FROM posts as p
+        JOIN USERS as u ON p.user_id = u.user_id 
+        WHERE p.deleted_at IS NULL 
+        ORDER BY p.created_at DESC
+        LIMIT ? OFFSET ?`;
+
+        const [posts] = await db.execute(postsSql, [limit + '', skip + '']);
 
         res.status(200).json({
             message: 'success',
-            posts: allPost,
+            posts,
         });
     } catch (error) {
         console.log(error);
     }
 };
 
-exports.getSinglePost = (req, res, next) => {
+exports.getSinglePost = async (req, res, next) => {
     try {
-        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
-        let users = JSON.parse(fs.readFileSync(usersJsonPath));
         const post_id = req.params.id * 1;
 
-        let post = posts.find((post) => post.post_id === post_id);
-        const creator = users.find((user) => user.user_id == post.creator.user_id);
-        if (!post) {
-            return next(new appError('page not found', 404));
+        const postSql = `
+      SELECT 
+        POSTS.*, 
+        USERS.avatar AS creator_avatar, 
+        USERS.nickname AS creator_nickname
+      FROM POSTS 
+      JOIN USERS ON POSTS.user_id = USERS.user_id 
+      WHERE POSTS.post_id = ? AND POSTS.deleted_at IS NULL`;
+
+        const [posts] = await db.execute(postSql, [post_id]);
+        if (posts.length === 0) {
+            return next(new appError('Post not found', 404));
         }
 
-        // 조회수 증가
-        // TODO : user ip 기반 제한 ?
-        post.count.view++;
-        fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
+        const post = posts[0];
 
-        post.creator.avatar = creator.avatar;
-        post.creator.nickname = creator.nickname;
-        post.comments.forEach((comment) => {
-            let comment_creator = users.find((user) => user.user_id == comment.creator.user_id);
-            comment.creator.avatar = comment_creator.avatar;
-            comment.creator.nickname = comment_creator.nickname;
-        });
+        // 댓글 가져오기
+        const commentsSql = `
+      SELECT 
+        COMMENTS.*, 
+        USERS.avatar AS creator_avatar, 
+        USERS.nickname AS creator_nickname
+      FROM COMMENTS 
+      JOIN USERS ON COMMENTS.user_id = USERS.user_id 
+      WHERE COMMENTS.post_id = ? AND COMMENTS.deleted_at IS NULL`;
+
+        const [comments] = await db.execute(commentsSql, [post_id]);
+        post.comments = comments;
+
+        // 조회수 증가
+        const updateViewCountSql = 'UPDATE POSTS SET count_view = count_view + 1 WHERE post_id = ?';
+        await db.execute(updateViewCountSql, [post_id]);
 
         res.status(200).json({
             message: 'success',
@@ -68,36 +80,28 @@ exports.getSinglePost = (req, res, next) => {
     }
 };
 
-exports.createPost = (req, res, next) => {
+exports.createPost = async (req, res, next) => {
     try {
-        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
         const { title, content } = req.body;
         const { user_id } = req.user;
-        const created_at = moment().format('YYYY-MM-DD HH:mm:ss');
         let image = req.file;
         let fileName = image.originalname.split('.');
-        // NOTE : 파일명 중복 안되게 파일명에 현재시각 삽입
         const currentTime = Math.floor(new Date().getTime() / 2000);
-        const maxPostId = posts[posts.length - 1]?.post_id || 0;
 
         const newPost = {
-            post_id: maxPostId + 1,
             title,
             content,
-            created_at: created_at,
             post_image: `${IMAGE_PATH}/${fileName[0]}_${currentTime}.${fileName[1]}`,
-            count: {
-                like: 0,
-                comment: 0,
-                view: 0,
-            },
-            creator: {
-                user_id,
-            },
-            comments: [],
+            user_id,
         };
-        posts.push(newPost);
-        fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
+
+        const createPostSql = `
+      INSERT INTO POSTS (title, content,post_image, user_id)
+      VALUES (?, ?, ?, ?)`;
+        const [result] = await db.execute(createPostSql, Object.values(newPost));
+
+        newPost.post_id = result.insertId;
+
         res.status(201).json({
             message: 'post created successfully',
             newPost,
@@ -107,27 +111,29 @@ exports.createPost = (req, res, next) => {
         next(new appError('Internal Server Error', 500));
     }
 };
-exports.updatePost = (req, res, next) => {
+exports.updatePost = async (req, res, next) => {
     try {
-        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
         const post_id = req.params.id * 1;
-        let post = posts.find((post) => post.post_id === post_id);
         const { title, content } = req.body;
-        post.title = title;
-        post.content = content;
 
-        if (req.file !== undefined) {
-            // 기존 이미지 삭제
-            deletePostImage(post);
+        let updateSql = 'UPDATE POSTS SET title = ?, content = ?';
+        const params = [title, content];
 
+        if (req.file) {
             // 이미지 업데이트 처리
             let image = req.file;
             let fileName = image.originalname.split('.');
             const currentTime = Math.floor(new Date().getTime() / 2000);
-            post.post_image = `${IMAGE_PATH}/${fileName[0]}_${currentTime}.${fileName[1]}`;
+            const post_image = `${IMAGE_PATH}/${fileName[0]}_${currentTime}.${fileName[1]}`;
+
+            updateSql += ', post_image = ?';
+            params.push(post_image);
         }
 
-        fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
+        updateSql += ' WHERE post_id = ?';
+        params.push(post_id);
+
+        await db.execute(updateSql, params);
 
         res.status(200).json({
             message: 'post updated successfully',
@@ -138,18 +144,14 @@ exports.updatePost = (req, res, next) => {
     }
 };
 
-exports.deletePost = (req, res, next) => {
+exports.deletePost = async (req, res, next) => {
     try {
-        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
-        const post_id = req.params.id;
-        let post = posts.find((post) => post.post_id == post_id);
-        // 파일 삭제
-        deletePostImage(post);
+        const post_id = req.params.id * 1;
 
-        // 더미데이터에서 해당 객체 삭제
-        let index = posts.indexOf(post);
-        posts.splice(index, 1);
-        fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
+        // 게시글 논리적 삭제
+        const deletePostSql = 'UPDATE POSTS SET deleted_at = CURRENT_TIMESTAMP WHERE post_id = ?';
+        await db.execute(deletePostSql, [post_id]);
+
         res.status(200).json({
             message: 'post deleted successfully',
         });
@@ -159,34 +161,29 @@ exports.deletePost = (req, res, next) => {
     }
 };
 
-exports.createComment = (req, res, next) => {
+exports.createComment = async (req, res, next) => {
     try {
-        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
-
         const post_id = req.params.post_id * 1;
-        const content = req.body.comment;
-        const user_id = req.user.user_id * 1;
+        const { comment } = req.body;
+        const { user_id } = req.user;
 
-        const created_at = moment().format('YYYY-MM-DD HH:mm:ss');
-
-        let post = posts.find((post) => post.post_id === post_id);
-        const maxCommentId = post.comments[post.comments.length - 1]?.comment_id || 0;
-        const comment_id = maxCommentId + 1;
-
-        const comment = {
-            comment_id,
-            creator: {
-                user_id,
-            },
-            content,
-            created_at,
+        const newComment = {
+            post_id,
+            user_id,
+            comment,
         };
-        post.comments.push(comment);
 
-        fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
+        const createCommentSql = `
+      INSERT INTO COMMENTS (post_id, user_id, content)
+      VALUES (?, ?, ?)`;
+        await db.execute(createCommentSql, Object.values(newComment));
+
+        // 댓글 수 증가
+        const updateCommentCountSql = 'UPDATE POSTS SET count_comment = count_comment + 1 WHERE post_id = ?';
+        await db.execute(updateCommentCountSql, [post_id]);
+
         res.status(201).json({
             message: 'comment created successfully',
-            post,
         });
     } catch (err) {
         console.log(err);
@@ -194,15 +191,14 @@ exports.createComment = (req, res, next) => {
     }
 };
 
-exports.updateComment = (req, res, next) => {
+exports.updateComment = async (req, res, next) => {
     try {
-        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
-        const content = req.body.comment;
         const { post_id, comment_id } = req.params;
-        let post = posts.find((post) => post.post_id === post_id * 1);
-        let comment = post.comments.find((comment) => comment.comment_id === comment_id * 1);
-        comment.content = content;
-        fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
+        const { comment } = req.body;
+
+        const updateCommentSql = 'UPDATE COMMENTS SET content = ? WHERE comment_id = ? AND post_id = ?';
+        await db.execute(updateCommentSql, [comment, comment_id, post_id]);
+
         res.status(200).json({
             message: 'comment updated successfully',
         });
@@ -212,21 +208,38 @@ exports.updateComment = (req, res, next) => {
     }
 };
 
-exports.deleteComment = (req, res, next) => {
+exports.deleteComment = async (req, res, next) => {
+    const connection = await db.getConnection();
+
     try {
-        let posts = JSON.parse(fs.readFileSync(postsJsonPath));
+        await connection.beginTransaction();
+
         const { post_id, comment_id } = req.params;
-        let post = posts.find((post) => post.post_id === post_id * 1);
 
-        let index = post.comments.findIndex((comment) => comment.comment_id == comment_id);
+        // 댓글 논리적 삭제
+        const deleteCommentSql =
+            'UPDATE COMMENTS SET deleted_at = CURRENT_TIMESTAMP WHERE comment_id = ? AND post_id = ?';
+        const [deleteCommentResult] = await connection.execute(deleteCommentSql, [comment_id, post_id]);
 
-        post.comments.splice(index, 1);
-        fs.writeFileSync(postsJsonPath, JSON.stringify(posts, null, 2), 'utf8');
+        if (deleteCommentResult.affectedRows === 0) {
+            await connection.rollback();
+            return next(new appError('Comment not found', 404));
+        }
+
+        // 댓글 수 감소
+        const updateCommentCountSql = 'UPDATE POSTS SET count_comment = count_comment - 1 WHERE post_id = ?';
+        await connection.execute(updateCommentCountSql, [post_id]);
+
+        await connection.commit();
+
         res.status(200).json({
             message: 'comment deleted successfully',
         });
     } catch (err) {
+        await connection.rollback();
         console.log(err);
         next(new appError('Internal Server Error', 500));
+    } finally {
+        connection.release();
     }
 };
