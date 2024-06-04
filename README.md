@@ -1,4 +1,4 @@
-![image](https://github.com/jjikky/5-jikky-kim-express-be/assets/59151187/e0dc4ae8-4924-4a57-bb3e-f5b507aef585)# **프로젝트 소개 및 Github**
+# **프로젝트 소개 및 Github**
 
 기본적인 게시판의 형태를 띄고 있는 커뮤니티 프로젝트로 기술간의 장단점을 체감하기 위해 버전에 따라 다른 기술로 구현
 
