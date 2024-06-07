@@ -6,6 +6,7 @@ const cors = require('cors');
 const appError = require('./utils/appError');
 const userRouter = require('./routes/user/user.route');
 const postRouter = require('./routes/post/post.route');
+const wordRouter = require('./routes/word/word.route');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
@@ -56,6 +57,7 @@ app.get('/', (req, res) => {
 });
 app.use('/users', userRouter);
 app.use('/posts', postRouter);
+app.use('/words', wordRouter);
 
 app.all('*', (req, _, next) => {
     next(new appError(`Can't find ${req.originalUrl} on this server`, 404));
