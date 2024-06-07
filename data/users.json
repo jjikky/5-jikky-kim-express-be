@@ -3,35 +3,49 @@
     "user_id": 1,
     "email": "user1@example.com",
     "password": "$2b$12$/3/LTcnJLtxf9T3CBKtkDOAzodWqB0BgbKiYbLzMxuiOcM1YApNJi",
-    "nickname": "user1",
+    "nickname": "지키주커버그",
     "avatar": "http://localhost:5000/uploads/avatar/user1.jpg"
   },
   {
     "user_id": 2,
     "email": "user2@example.com",
     "password": "$2b$12$/3/LTcnJLtxf9T3CBKtkDOAzodWqB0BgbKiYbLzMxuiOcM1YApNJi",
-    "nickname": "user2",
+    "nickname": "세니",
     "avatar": "http://localhost:5000/uploads/avatar/user2.jpg"
   },
   {
     "user_id": 3,
     "email": "user3@example.com",
     "password": "$2b$12$/3/LTcnJLtxf9T3CBKtkDOAzodWqB0BgbKiYbLzMxuiOcM1YApNJi",
-    "nickname": "user3",
+    "nickname": "트루",
     "avatar": "http://localhost:5000/uploads/avatar/user3.jpg"
   },
   {
     "user_id": 4,
     "email": "user4@example.com",
     "password": "$2b$12$wOuj7Ur90SxN3i.cxMjTZ.PKJoJQ/rC1Lx5JRXQJBLbkNNAxNIyZK",
-    "nickname": "user4",
+    "nickname": "션",
     "avatar": "http://localhost:5000/uploads/avatar/다운로드 (3)_857932194.png"
   },
   {
     "user_id": 5,
     "email": "user5@example.com",
     "password": "$2b$12$Zw96gs6zhkqezNwIYKxaQeVY3OfLodx/y.n5kzcv8MiJQGdxtjSkG",
-    "nickname": "user5",
+    "nickname": "레아",
     "avatar": "http://localhost:5000/uploads/avatar/images (3)_857956638.jpg"
+  },
+  {
+    "user_id": 6,
+    "email": "user6@example.com",
+    "password": "$2b$12$u.DTalh5yZXPg/0Wln3EjesIFgfufnKJJtl8agCuNsUO8OzMexrbq",
+    "nickname": "에반",
+    "avatar": "http://localhost:5000/uploads/avatar/images_858877611.png"
+  },
+  {
+    "user_id": 7,
+    "email": "user7@example.com",
+    "password": "$2b$12$wMtpOnaPeX/QsV76.wfr9.7vwlLSzIFQdnt.Yk3a8lSlIzEW0v1qy",
+    "nickname": "지키지키",
+    "avatar": "http://localhost:5000/uploads/avatar/images_858878247.jpg"
   }
 ]

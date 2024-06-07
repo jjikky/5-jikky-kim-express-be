@@ -1,14 +1,14 @@
 [
   {
     "post_id": 1,
-    "title": "제목 1 26글자 넘는 게시물 제목이니까 잘라서 보여주세요 26글자 넘는 게시물 제목이니까 잘라서 보여주세요",
+    "title": "기여운 두들스 친구들",
     "content": "무엇을 얘기할까요? 아무말이라면, 삶은 항상 놀라운 모험이라고 생각합니다. 우리는 매일 새로운 경험을 하고 배우며 성장합니다. 때로는 어려움과 도전이 있지만, 그것들이 우리를 더 강하고 지혜롭게 만듭니다. 또한 우리는 주변의 사람들과 연결되며 사랑과 지지를 받습니다. 그래서 우리의 삶은 소중하고 의미가 있습니다. 자연도 아름다운 이야기입니다. 우리 주변의 자연은 끝없는 아름다움과 신비로움을 담고 있습니다. 산, 바다, 숲, 하늘 등 모든 것이 우리를 놀라게 만들고 감동시킵니다. 자연은 우리의 생명과 안정을 지키며 우리에게 힘을 주는 곳입니다. 마지막으로, 지식을 향한 탐구는 항상 흥미로운 여정입니다. 우리는 끝없는 지식의 바다에서 배우고 발견할 수 있으며, 이것이 우리를 더 깊이 이해하고 세상을 더 넓게 보게 해줍니다. 그런 의미에서, 삶은 놀라움과 경이로움으로 가득 차 있습니다. 새로운 경험을 즐기고 항상 앞으로 나아가는 것이 중요하다고 생각합니다. ",
     "created_at": "2021-01-01 00:00:00",
     "post_image": "http://localhost:5000/uploads/post/post_img_ex.png",
     "count": {
       "like": 120,
       "comment": 34000,
-      "view": 750090
+      "view": 750129
     },
     "creator": {
       "user_id": 1,
@@ -49,6 +49,14 @@
         },
         "content": "헬로우\n",
         "created_at": "2024-05-17 10:57:04"
+      },
+      {
+        "comment_id": 5,
+        "creator": {
+          "user_id": 5
+        },
+        "content": "gg",
+        "created_at": "2024-06-07 18:48:35"
       }
     ]
   },
@@ -112,8 +120,8 @@
   },
   {
     "post_id": 4,
-    "title": "내일은 불끈불끈 불금불금",
-    "content": "현실은 집구석 ㅠ",
+    "title": "내가 최고얌ㅋ",
+    "content": "ㅠㅠ",
     "created_at": "2024-05-16 21:58:59",
     "post_image": "http://localhost:5000/uploads/post/sec1_857932169.jpg",
     "count": {
@@ -163,7 +171,39 @@
       "view": 1
     },
     "creator": {
-      "user_id": 4
+      "user_id": 6
+    },
+    "comments": []
+  },
+  {
+    "post_id": 7,
+    "title": "hello",
+    "content": "hi",
+    "created_at": "2024-06-07 18:54:30",
+    "post_image": "http://localhost:5000/uploads/post/main_858877035.jpg",
+    "count": {
+      "like": 0,
+      "comment": 0,
+      "view": 7
+    },
+    "creator": {
+      "user_id": 5
+    },
+    "comments": []
+  },
+  {
+    "post_id": 8,
+    "title": "푸른하늘 붉은노을",
+    "content": "은하수",
+    "created_at": "2024-06-07 19:35:49",
+    "post_image": "http://localhost:5000/uploads/post/main_858878284.jpg",
+    "count": {
+      "like": 0,
+      "comment": 0,
+      "view": 6
+    },
+    "creator": {
+      "user_id": 7
     },
     "comments": []
   }

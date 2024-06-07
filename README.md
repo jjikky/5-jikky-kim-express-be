@@ -2,35 +2,26 @@
 
 기본적인 게시판의 형태를 띄고 있는 커뮤니티 프로젝트로 기술간의 장단점을 체감하기 위해 버전에 따라 다른 기술로 구현
 
--   ver1
-    -   ver1.1 : `vanila` `express` `json`
-        -   FE : https://github.com/jjikky/5-jikky-kim-vanila-fe
-        -   BE : https://github.com/jjikky/5-jikky-kim-express-be/tree/json-archive
-    -   ver1.2 : `jwt / cookie&session` 두가지 방식의 인증 인가 추가 ( 브랜치로 분기 )
-        -   `cookie&session`
-            -   FE : https://github.com/jjikky/5-jikky-kim-vanila-fe
-            -   BE : https://github.com/jjikky/5-jikky-kim-express-be/tree/json-archive
-        -   `jwt`
-            -   FE : https://github.com/jjikky/5-jikky-kim-vanila-fe/tree/jwt-archive
-            -   BE : https://github.com/jjikky/5-jikky-kim-express-be/tree/jwt-archive
--   ver2
-    -   ver2.1 : `react` `express` `json`
-        -   FE를 react로 변경 : https://github.com/jjikky/5-jikky-kim-react-fe/tree/json-archive
-    -   ver2.2 : `react` `express` `mySQL`
-        -   데이터 저장소 json → mySQL 변경
-        -   FE : https://github.com/jjikky/5-jikky-kim-react-fe/tree/main
-        -   BE : https://github.com/jjikky/5-jikky-kim-express-be/tree/main
-            -   Service Layer Architecture로 변경
+-   ver1 : `vanila` `express` `json`
+    -   [🔗FE Github](https://github.com/jjikky/5-jikky-kim-vanila-fe)
+    -   [🔗BE Github](https://github.com/jjikky/5-jikky-kim-express-be/tree/json-archive)
+-   ver2 : `react` `express` `mySQL`
+
+    -   [🔗FE Github](https://github.com/jjikky/5-jikky-kim-react-fe)
+    -   [🔗BE Github](https://github.com/jjikky/5-jikky-kim-express-be)
+
 -   ver3 : `react` `spring` `mySQL`
     -   개발 진행 중
 
-# 커뮤니티 게시판 ver 1.1
+# 커뮤니티 게시판 ver 1
 
 ## 프로젝트 기간
 
-2024.04.05 ~ 2024.04.22 ( 12 영업일 )
+2024.04.05 ~ 2024.04.28 ( 16 영업일 )
 
-## GitHub [🔗FE : vanila JS](https://github.com/jjikky/5-jikky-kim-vanila-fe) [🔗BE : Express](https://github.com/jjikky/5-jikky-kim-express-be/tree/json-archive)
+## GitHub
+
+[🔗FE : vanila JS](https://github.com/jjikky/5-jikky-kim-vanila-fe) [🔗BE : Express](https://github.com/jjikky/5-jikky-kim-express-be/tree/json-archive)
 
 ## 사용 기술
 
@@ -42,7 +33,7 @@
     -   main branch는 cookie-session방식 / archive-jwt branch는 jwt방식
 -   게시글 댓글 CRUD, 이미지 업로드, 무한스크롤, 토스트메세지
 -   회원 닉네임, 비밀번호 변경, 회원탈퇴
--   DB 대신 BE서버에 json 파일에 데이터를 저장
+-   DB 대신 BE서버에 json 파일로 데이터를 저장
 
 ## 개발 내용
 
@@ -60,55 +51,6 @@
 -   route - controller - model 구조를 이용해 서버 구현
 -   custom error 클래스를 작성하여 error response 핸들링
 -   STATUS CODE, HTTP METHOD, 응답 형식, URL NAMING등 REST 하게 구현
-
-## 구현 결과
-
-### 로그인 & 회원가입 페이지
-
-https://github.com/jjikky/5-jikky-kim-vanila-fe/assets/59151187/dc9841b6-1ea6-49f1-8eeb-4da7d6d39611
-
-### 회원 정보 수정 페이지
-
-https://github.com/jjikky/5-jikky-kim-vanila-fe/assets/59151187/4d29c9ab-6d83-4832-8e82-5a34b9bdc80c
-
-### 비밀번호 변경 페이지
-
-https://github.com/jjikky/5-jikky-kim-vanila-fe/assets/59151187/5a7aeba6-129b-49e4-8127-2465def4213c
-
-### 게시글 목록 조회 페이지
-
-https://github.com/jjikky/5-jikky-kim-vanila-fe/assets/59151187/c65c49b5-efde-4c53-9f55-8d3c5f9b0119
-
-### 게시글 상세 조회 페이지
-
-https://github.com/jjikky/5-jikky-kim-vanila-fe/assets/59151187/bc7e052e-072a-4f60-96d0-e59621d1a314
-
-### 게시글 작성 페이지
-
-https://github.com/jjikky/5-jikky-kim-vanila-fe/assets/59151187/08d069e5-591c-4f6e-aea5-b12880b5d427
-
-### 게시글 수정 페이지
-
-https://github.com/jjikky/5-jikky-kim-vanila-fe/assets/59151187/e30bd5af-84db-43d0-8139-4250de60f683
-
-### 자체 QA
-
-![image](https://github.com/jjikky/5-jikky-kim-vanila-fe/assets/59151187/65668e5b-83ce-4c42-97ce-c2e676f9aff5)
-
-## 회고 및 개발 일지
-
--   [🔗1주차 회고](https://velog.io/@jikky/%EC%B9%B4%EC%B9%B4%EC%98%A4-%ED%81%B4%EB%9D%BC%EC%9A%B0%EB%93%9C-%EC%8A%A4%EC%BF%A8-1%EC%A3%BC%EC%B0%A8-%ED%9A%8C%EA%B3%A0)
--   [🔗2주차 회고](https://velog.io/@jikky/%EC%B9%B4%EC%B9%B4%EC%98%A4-%ED%81%B4%EB%9D%BC%EC%9A%B0%EB%93%9C-%EC%8A%A4%EC%BF%A8-2%EC%A3%BC%EC%B0%A8-%ED%9A%8C%EA%B3%A0)
-
-# 커뮤니티 게시판 ver 1.2
-
-## 프로젝트 기간
-
-2024.04.23 ~ 2024.04.28 ( 4 영업일 )
-
-## 개발 내용
-
-ver 1.1에 인증 인가 추가 구현
 
 ## 인증 구현
 
@@ -139,17 +81,15 @@ FE BE 모두 JWT방식은 jwt-archive 브랜치로 분기했습니다.
 -   인증이 필요한 라우터에 유저 검증 미들웨어를 앞에 배치해서 guard
 -   자동로그인 구현
 
-**FE 해당 코드 PR**
+## 구현 결과
 
-[♻️ 인증방식 변경 jwt -> cookie&session by jjikky · Pull Request #8 · 100-hours-a-week/5-jikky-kim-vanila-fe](https://github.com/100-hours-a-week/5-jikky-kim-vanila-fe/pull/8)
-
-**BE 해당 코드 PR**
-
-[Feature/auth by jjikky · Pull Request #2 · 100-hours-a-week/5-jikky-kim-express-be](https://github.com/100-hours-a-week/5-jikky-kim-express-be/pull/2)
+https://github.com/jjikky/5-jikky-kim-vanila-fe/assets/59151187/562da72f-46c7-4b6f-916f-7344027848ee
 
 ## 회고 및 개발 일지
 
 -   [🔗3주차 회고](https://velog.io/@jikky/%EC%B9%B4%EC%B9%B4%EC%98%A4-%ED%81%B4%EB%9D%BC%EC%9A%B0%EB%93%9C-%EC%8A%A4%EC%BF%A8-3%EC%A3%BC%EC%B0%A8-%ED%9A%8C%EA%B3%A0)
+-   [🔗2주차 회고](https://velog.io/@jikky/%EC%B9%B4%EC%B9%B4%EC%98%A4-%ED%81%B4%EB%9D%BC%EC%9A%B0%EB%93%9C-%EC%8A%A4%EC%BF%A8-2%EC%A3%BC%EC%B0%A8-%ED%9A%8C%EA%B3%A0)
+-   [🔗1주차 회고](https://velog.io/@jikky/%EC%B9%B4%EC%B9%B4%EC%98%A4-%ED%81%B4%EB%9D%BC%EC%9A%B0%EB%93%9C-%EC%8A%A4%EC%BF%A8-1%EC%A3%BC%EC%B0%A8-%ED%9A%8C%EA%B3%A0)
 -   [🔗2024-04-26 : 쿠키 & 세션 구현](https://github.com/jjikky/jikky-til/blob/main/Apr/2024-04-26.md)
 -   [🔗2024-04-25 : 디바운싱 / jwt 저장 시나리](https://github.com/jjikky/jikky-til/blob/main/Apr/2024-04-25.md)
 -   [🔗2024-04-24 : FE JWT처리와 FE 리팩토링](https://github.com/jjikky/jikky-til/blob/main/Apr/2024-04-24.md)
