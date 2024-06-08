@@ -67,6 +67,19 @@ exports.deletePost = async (req, res, next) => {
     }
 };
 
+exports.getComments = async (req, res, next) => {
+    try {
+        const comments = await postService.getComments(req.params.post_id);
+        res.status(200).json({
+            message: 'success',
+            comments,
+        });
+    } catch (err) {
+        console.error(err);
+        next(new appError('Internal Server Error', 500));
+    }
+};
+
 exports.createComment = async (req, res, next) => {
     try {
         await postService.createComment(req.params.post_id, req.body.comment, req.user.user_id);
