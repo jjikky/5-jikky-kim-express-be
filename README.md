@@ -33,9 +33,18 @@ react + express + mySQL
 -   데이터 물리적 삭제에서 논리적 삭제로 변경
 -   updated_at, deleted_at 등의 테이블 구조 변경
 -   디자인 패턴 변경
+-   개발 용어 한국어 발음 검색 기능 추
 
+## 시연 영상
+
+https://github.com/jjikky/5-jikky-kim-express-be/assets/59151187/ff62193c-f658-489c-997e-8f3bdbd85828
 
 ## 테이블 설계
+
+### 전체 테이블
+
+![image](https://github.com/jjikky/5-jikky-kim-express-be/assets/59151187/257363bd-4951-4bd2-b4af-fcbf05f9560c)
+
 
 ### 회원정보 테이블
 
@@ -175,6 +184,44 @@ CREATE TABLE LIKES (
 - **`PRIMARY KEY (user_id, post_id)`**: 복합 키를 사용하여 각 사용자가 각 게시글에 대해 한 번만 좋아요를 누를 수 있도록 보장
 - **`FOREIGN KEY (user_id)`**: `USERS` 테이블의 `user_id`를 참조하는 외래키 제약 조건
 - **`FOREIGN KEY (post_id)`**: `POSTS` 테이블의 `post_id`를 참조하는 외래키 제약 조건
+
+## word 테이블
+
+### 논리적 스키마
+
+![image](https://github.com/jjikky/5-jikky-kim-express-be/assets/59151187/97a15d0c-5c13-47e5-9d1c-da6f78e224bb)
+
+### 물리적 스키마
+
+```sql
+CREATE TABLE WORDS (
+    word_id INT NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    title VARCHAR(26) NOT NULL,
+    content TEXT NOT NULL,
+    count_like INT NOT NULL DEFAULT 0,
+    count_view INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL DEFAULT NULL,
+    PRIMARY KEY (word_id),
+    FOREIGN KEY (user_id) REFERENCES USERS (user_id)
+);
+
+```
+
+### 속성 설명
+
+- `word_id`: 단어 고유의 ID. 자동 증가하며 기본 키로 사용
+- `user_id`: 단어 생성자의 ID. `USERS` 테이블의 `user_id`를 참조하는 외래키
+- `title`: 단어의 제목. 최대 26자까지 저장
+- `content`: 단어의 내용
+- `count_like`: 단어의 좋아요 수. 기본값은 0
+- `count_view`: 단어의 조회 수. 기본값은 0
+- `created_at`: 단어 생성 시간을 저장. 기본값은 현재 시각
+- `updated_at`: 단어 수정 시간을 저장. 기본값은 현재 시각이며, 레코드가 수정될 때마다 현재 시간으로 업데이트
+- `deleted_at`: 단어 삭제 시간을 저장. 기본값은 `NULL`이며, 레코드가 삭제될 때 현재 시간으로 업데이트 하여, 논리적 삭제
+    - express에서와는 다르게 댓글 삭제 시간을 저장하여 논리적 삭제로 구현하여, 데이터 복구 시점 추적 및 삭제 이력 관리
 
 
 ### 폴더 구조
