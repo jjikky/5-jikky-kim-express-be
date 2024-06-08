@@ -5,6 +5,7 @@ const {
     createPost,
     updatePost,
     deletePost,
+    getComments,
     createComment,
     updateComment,
     deleteComment,
@@ -17,6 +18,7 @@ const postRouter = express.Router();
 postRouter.get('/', isLoggedIn, getAllPost);
 postRouter.get('/:id', isLoggedIn, getSinglePost);
 
+postRouter.get('/:post_id/comments', isLoggedIn, getComments);
 postRouter.post('/:post_id/comment', isLoggedIn, createComment);
 postRouter.patch('/:post_id/comment/:comment_id', isLoggedIn, updateComment);
 postRouter.delete('/:post_id/comment/:comment_id', isLoggedIn, deleteComment);

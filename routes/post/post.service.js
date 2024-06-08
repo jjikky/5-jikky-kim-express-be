@@ -11,14 +11,11 @@ exports.getAllPost = async (page, limit) => {
     return await postRepository.getAllPost(limitNumber, skip);
 };
 
-exports.getSinglePost = async (post_id, user_id) => {
+exports.getSinglePost = async (post_id) => {
     const post = await postRepository.getSinglePost(post_id);
     if (!post) {
         throw new appError('Post not found', 404);
     }
-
-    const comments = await postRepository.getCommentsByPostId(post_id);
-    post.comments = comments;
 
     // 조회수 증가
     await postRepository.incrementViewCount(post_id);
@@ -54,6 +51,10 @@ exports.updatePost = async (post_id, postData, file) => {
 
 exports.deletePost = async (post_id) => {
     await postRepository.deletePost(post_id);
+};
+
+exports.getComments = async (post_id) => {
+    return await postRepository.getCommentsByPostId(post_id);
 };
 
 exports.createComment = async (post_id, comment, user_id) => {
