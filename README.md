@@ -7,11 +7,13 @@
     -   [🔗BE Github](https://github.com/jjikky/5-jikky-kim-express-be/tree/json-archive)
 -   ver2 : `react` `express` `mySQL`
 
-    -   [🔗FE Github](https://github.com/jjikky/5-jikky-kim-react-fe)
-    -   [🔗BE Github](https://github.com/jjikky/5-jikky-kim-react-fe/tree/with-express)
+    -   [🔗FE Github](https://github.com/jjikky/5-jikky-kim-react-fe/tree/with-express)
+    -   [🔗BE Github](https://github.com/jjikky/5-jikky-kim-express-be)
 
 -   ver3 : `react` `spring` `mySQL`
-    -   개발 진행 중
+
+    -   [🔗FE Github](https://github.com/jjikky/5-jikky-kim-react-fe)
+    -   [🔗BE Github](https://github.com/jjikky/5-jikky-kim-spring-be)
 
 # 커뮤니티 게시판 ver 1
 
