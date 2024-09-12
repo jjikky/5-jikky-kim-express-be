@@ -31,11 +31,10 @@ react + express + mySQL
 
 **BE**
 
--   json → mySQL로 변환
+-   파일시스템 → mySQL로 DB 이전
 -   데이터 물리적 삭제에서 논리적 삭제로 변경
 -   updated_at, deleted_at 등의 테이블 구조 변경
--   디자인 패턴 변경
--   개발 용어 한국어 발음 검색 기능 추
+-   개발 용어 한국어 발음 검색 기능 추가
 
 ## 시연 영상
 
